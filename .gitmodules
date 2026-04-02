@@ -1,0 +1,6 @@
+[submodule "Backend"]
+	path = Backend
+	url = git@github.com:Crazzygem/marketplace_backend.git
+[submodule "Frontend"]
+	path = Frontend
+	url = git@github.com:Crazzygem/marketplace_frontend.git
