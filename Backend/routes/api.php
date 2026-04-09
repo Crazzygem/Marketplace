@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\LoggerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\SavedItemController;
@@ -22,6 +23,9 @@ Route::middleware('throttle:5,1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });
+
+// Public endpoint for client-side error logging (no auth required)
+Route::post('/logs/client-errors', [LoggerController::class, 'clientErrors']);
 
 /*
 |--------------------------------------------------------------------------
