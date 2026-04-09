@@ -137,11 +137,8 @@ EOF
 # -------------------------------------------------------------------------
 do_build() {
     info "Building Docker images..."
-    # Build frontend with API_URL argument from environment
-    # Use relative path /api for same-origin requests (no CORS issues)
-    docker compose build \
-        --build-arg FRONTEND_API_URL="${FRONTEND_API_URL:-/api}" \
-        frontend
+    # Build frontend (API URL is now embedded in environment.production.ts)
+    docker compose build frontend
     # Build other services
     docker compose build
     success "Docker images built"

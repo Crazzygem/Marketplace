@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'REPLACE_WITH_API_URL' // Will be replaced during deployment
+  // Use relative /api for same-origin requests (no CORS issues)
+  // This is replaced at build time by Dockerfile, but fallback to relative path
+  apiUrl: '/api'
 };

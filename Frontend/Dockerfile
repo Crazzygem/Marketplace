@@ -17,9 +17,6 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Replace API URL in production environment file
-RUN sed -i "s|REPLACE_WITH_API_URL|${FRONTEND_API_URL}|g" src/environments/environment.production.ts
-
 # Build the Angular app for production
 RUN npm run build:prod
 
