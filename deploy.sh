@@ -226,6 +226,12 @@ do_seed() {
     success "Database seeded"
 }
 
+do_seed_admin() {
+    info "Seeding admin user..."
+    docker compose exec -T backend php artisan db:seed --class=AdminUserSeeder --force
+    success "Admin user seeded (email: admin@gmail.com, password: password)"
+}
+
 do_migrate() {
     info "Running database migrations..."
     docker compose exec -T backend php artisan migrate --force
@@ -335,6 +341,9 @@ case "${1:-deploy}" in
     seed)
         check_prerequisites && setup_env && do_seed
         ;;
+    seed-admin)
+        check_prerequisites && setup_env && do_seed_admin
+        ;;
     artisan)
         check_prerequisites && setup_env && do_artisan "${@:2}"
         ;;
@@ -362,6 +371,7 @@ case "${1:-deploy}" in
         echo "  build             Rebuild Docker images"
         echo "  migrate           Run database migrations"
         echo "  seed              Seed the database"
+        echo "  seed-admin       Seed only the admin user"
         echo "  artisan <cmd>     Run artisan command in backend container"
         echo "  shell             Open a shell in the backend container"
         echo "  status            Show container status and URLs"
