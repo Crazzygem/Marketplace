@@ -17,6 +17,10 @@ if [ ! -L public/storage ]; then
   echo "Created storage symlink"
 fi
 
+# Create necessary directories for file storage
+mkdir -p storage/app/public/listings
+echo "Ensured storage directories exist"
+
 # Permissions for writable directories
 chown -R appuser:appuser storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
