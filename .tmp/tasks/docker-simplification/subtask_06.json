@@ -1,0 +1,28 @@
+{
+  "id": "docker-simplification-06",
+  "seq": "06",
+  "title": "Create deploy.sh for one-command deployment",
+  "status": "pending",
+  "depends_on": ["01"],
+  "parallel": false,
+  "suggested_agent": "CoderAgent",
+  "context_files": [
+    "/home/cheypiseth/.config/opencode/context/core/context-system/standards/mvi.md"
+  ],
+  "reference_files": [
+    "docker-compose.yml",
+    ".env.example"
+  ],
+  "acceptance_criteria": [
+    "deploy.sh is executable (chmod +x)",
+    "Script checks for .env file and creates from .env.example if missing",
+    "Script runs docker compose up -d --build",
+    "Script waits for services to be healthy before returning",
+    "Script provides status output and health checks",
+    "Script handles errors gracefully with clear messages",
+    "File is <100 lines following MVI principle"
+  ],
+  "deliverables": [
+    "deploy.sh"
+  ]
+}

@@ -1,0 +1,32 @@
+# =============================================================================
+# Marketplace Platform - Root .gitignore
+# =============================================================================
+
+# --- AI / Agent generated files (not part of project source) ---
+AGENTS.md
+COMPONENT_REFERENCE.md
+PAGE_INVENTORY.md
+UI_RULES.md
+skills-lock.json
+.agents/
+plans/
+
+# --- Environment ---
+.env
+.env.local
+.env.*.local
+
+# --- IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Docker volumes (local data) ---
+mysql-data/
+redis-data/

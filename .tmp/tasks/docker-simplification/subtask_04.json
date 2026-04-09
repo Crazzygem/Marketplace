@@ -1,0 +1,30 @@
+{
+  "id": "docker-simplification-04",
+  "title": "Fix nginx/nginx.conf storage path",
+  "seq": "04",
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-01-28T00:00:00Z",
+  "completed_at": "2026-01-28T00:05:00Z",
+  "completion_summary": "Fixed nginx storage path alias from double /public/ to single /public/",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [
+    "/home/cheypiseth/.config/opencode/context/core/context-system/standards/mvi.md"
+  ],
+  "reference_files": [
+    "nginx/nginx.conf",
+    "Backend/docker/nginx/default.conf"
+  ],
+  "acceptance_criteria": [
+    "Storage path changed from /storage/app/public/public/ to /storage/app/public/",
+    "Comment on line 102-103 updated to reflect correct path",
+    "All other nginx configuration preserved",
+    "Alias directive correctly points to volume mount",
+    "File remains <150 lines following MVI principle"
+  ],
+  "deliverables": [
+    "nginx/nginx.conf"
+  ]
+}

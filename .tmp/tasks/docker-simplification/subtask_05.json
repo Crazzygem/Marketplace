@@ -1,0 +1,28 @@
+{
+  "id": "docker-simplification-05",
+  "seq": "05",
+  "title": "Update .env.example with all required variables",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [
+    "/home/cheypiseth/.config/opencode/context/core/context-system/standards/mvi.md"
+  ],
+  "reference_files": [
+    ".env.example",
+    "Backend/.env.example",
+    "docker-compose.yml"
+  ],
+  "acceptance_criteria": [
+    ".env.example includes all variables from docker-compose.yml",
+    "Redis-related variables (REDIS_HOST, REDIS_PORT) removed",
+    "APP_KEY variable added with instructions to generate",
+    "Documentation for each variable group (App, Database, Docker)",
+    "Variables match Laravel .env.example format",
+    "File is <80 lines following MVI principle"
+  ],
+  "deliverables": [
+    ".env.example"
+  ]
+}

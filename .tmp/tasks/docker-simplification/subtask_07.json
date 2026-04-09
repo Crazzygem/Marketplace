@@ -1,0 +1,25 @@
+{
+  "id": "docker-simplification-07",
+  "seq": "07",
+  "title": "Remove standalone docker-compose files and Redis references",
+  "status": "pending",
+  "depends_on": ["01"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [
+    "/home/cheypiseth/.config/opencode/context/core/context-system/standards/mvi.md"
+  ],
+  "reference_files": [
+    "Backend/docker-compose.yml",
+    "Frontend/docker-compose.yml",
+    "Backend/Dockerfile"
+  ],
+  "acceptance_criteria": [
+    "Backend/docker-compose.yml file deleted",
+    "Frontend/docker-compose.yml file deleted",
+    "Backend/Dockerfile has no Redis extension installation (already in subtask 03)",
+    "No redis-data volume in root docker-compose.yml",
+    "Git shows these files as deleted"
+  ],
+  "deliverables": []
+}
