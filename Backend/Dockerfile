@@ -6,7 +6,8 @@ FROM composer:2 AS builder
 WORKDIR /app
 
 # Copy composer files first for better layer caching
-COPY composer.json composer.lock ./
+# composer.lock is optional (not tracked in git)
+COPY composer.json* composer.lock* ./
 
 # Install dependencies without dev for production
 # --no-scripts skips Laravel post-install hooks (artisan doesn't exist yet)
