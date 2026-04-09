@@ -16,7 +16,7 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
       args:
-        - API_URL=${FRONTEND_API_URL:-http://localhost:8080/api}
+        - FRONTEND_API_URL=${FRONTEND_API_URL:-/api}
     container_name: marketplace-frontend
     restart: unless-stopped
     networks:

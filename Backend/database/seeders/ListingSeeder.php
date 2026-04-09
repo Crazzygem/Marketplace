@@ -212,7 +212,7 @@ class ListingSeeder extends Seeder
                 'stock_quantity' => $listingData['stock_quantity'],
                 'category_id' => $listingData['category_id'],
                 'status' => $listingData['status'],
-                'image_urls' => json_encode(["listings/{$imageName}"]), // Use the product-specific image
+                'image_urls' => json_encode([]), // No images - users can upload their own
             ]);
         }
     }
