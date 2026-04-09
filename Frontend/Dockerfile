@@ -3,8 +3,8 @@
 # =============================================================================
 FROM node:20-alpine AS builder
 
-# Build argument for API URL (defaults to localhost:8000)
-ARG API_URL=http://localhost:8000/api
+# Build argument for API URL (defaults to /api for same-origin requests)
+ARG FRONTEND_API_URL=/api
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ RUN npm ci
 COPY . .
 
 # Replace API URL in production environment file
-RUN sed -i "s|REPLACE_WITH_API_URL|${API_URL}|g" src/environments/environment.production.ts
+RUN sed -i "s|REPLACE_WITH_API_URL|${FRONTEND_API_URL}|g" src/environments/environment.production.ts
 
 # Build the Angular app for production
 RUN npm run build:prod

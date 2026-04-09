@@ -113,8 +113,9 @@ QUEUE_CONNECTION=database
 
 # ---------------------------------------------------------------------------
 # Frontend API URL (Set during build)
+# Use relative path /api for same-origin requests (no CORS issues)
 # ---------------------------------------------------------------------------
-FRONTEND_API_URL=http://localhost/api
+FRONTEND_API_URL=/api
 
 # ---------------------------------------------------------------------------
 # MySQL Root Password (for Docker)
@@ -137,8 +138,9 @@ EOF
 do_build() {
     info "Building Docker images..."
     # Build frontend with API_URL argument from environment
+    # Use relative path /api for same-origin requests (no CORS issues)
     docker compose build \
-        --build-arg FRONTEND_API_URL="${FRONTEND_API_URL:-http://localhost:8080/api}" \
+        --build-arg FRONTEND_API_URL="${FRONTEND_API_URL:-/api}" \
         frontend
     # Build other services
     docker compose build
