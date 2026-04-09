@@ -210,10 +210,6 @@ do_setup_backend() {
     info "Running database migrations..."
     docker compose exec -T backend php artisan migrate --force
 
-    # Always seed admin user (essential for app to work)
-    info "Seeding admin user..."
-    docker compose exec -T backend php artisan db:seed --class=AdminUserSeeder --force
-
     # Create storage symlink
     info "Creating storage symlink..."
     docker compose exec -T backend php artisan storage:link 2>/dev/null || true
@@ -310,14 +306,6 @@ do_deploy() {
     # Show status
     echo ""
     do_status
-
-    echo ""
-    info "=============================================="
-    info "Admin User Credentials:"
-    info "  Email:    admin@gmail.com"
-    info "  Password: password"
-    info "=============================================="
-    echo ""
 
     success "Deployment complete!"
 }
