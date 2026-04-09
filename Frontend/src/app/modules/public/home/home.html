@@ -1,0 +1,148 @@
+<div class="container-fluid px-0">
+  <!-- Search Bar -->
+  <div class="bg-white border-bottom py-3 px-3">
+    <div class="container">
+      <div class="row g-2">
+        <div class="col-md-5">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for items..." [(ngModel)]="searchQuery" (keyup.enter)="searchListings()">
+            <button class="btn btn-outline-secondary" type="button" (click)="searchListings()">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="selectedCategory" (change)="filterByCategory()">
+            <option value="">All Categories</option>
+            <option *ngFor="let category of categories" [value]="category.category_id">
+              <i class="fas {{ categoryIconService.getIcon(category.category_name) }} me-2"></i>
+              {{ category.category_name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" [(ngModel)]="sortBy" (change)="sortListings()">
+            <option value="newest">Newest</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" (click)="loadListings()">Refresh</button>
+        </div>
+        <div class="col-12 mt-2">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="includeSold" [(ngModel)]="includeSold" (change)="loadListings()">
+            <label class="form-check-label" for="includeSold">
+              <small class="text-muted">Show sold items</small>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <!-- <div class="bg-light rounded-3 mb-4 p-5 text-center">
+      <h1 class="display-5 fw-bold">Find What You Need</h1>
+      <p class="col-md-8 mx-auto fs-4">Browse through thousands of products from trusted sellers</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button class="btn btn-primary btn-lg px-4 me-sm-3" type="button">Start Shopping</button>
+        <button class="btn btn-outline-secondary btn-lg px-4" type="button" (click)="sellSomething()">Sell Something</button>
+      </div>
+    </div> -->
+
+    <!-- Category Filters -->
+    <div class="mb-4" *ngIf="popularCategories.length > 0">
+      <h5>Popular Categories</h5>
+      <div class="d-flex overflow-x-auto pb-2" style="white-space: nowrap;">
+        <button
+          *ngFor="let category of popularCategories"
+          class="btn btn-outline-primary me-2 flex-shrink-0"
+          [class.active]="selectedCategory === category.category_id"
+          (click)="selectCategory(category.category_id)">
+          <i class="fas {{ getIcon(category.icon) }} me-2"></i>
+          {{ category.category_name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Listings Grid -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && listings.length === 0" class="text-center py-5">
+      <h4>No listings found</h4>
+      <p>Try adjusting your search or filters</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" *ngIf="!loading && listings.length > 0">
+      <div class="col" *ngFor="let listing of listings">
+        <div class="card h-100 listing-card">
+          <div class="position-relative">
+            <div class="card-img-container">
+              <a [routerLink]="['/public/product', listing.listing_id]">
+                <img
+                  *ngIf="getImageUrl(listing.image_urls)"
+                  [src]="getImageUrl(listing.image_urls)"
+                  class="card-img-top"
+                  alt="{{ listing.title }}">
+                <div *ngIf="!getImageUrl(listing.image_urls)" class="card-img-top no-image-placeholder d-flex align-items-center justify-content-center" style="background-color: var(--muted);">
+                  <span class="text-muted">No Image</span>
+                </div>
+              </a>
+            </div>
+            <div class="position-absolute top-0 start-0 m-2">
+              <span class="badge bg-danger" *ngIf="listing.is_sold">SOLD</span>
+              <span class="badge bg-success" *ngIf="!listing.is_sold && listing.status === 'Active'">Available</span>
+              <span class="badge bg-warning text-dark" *ngIf="!listing.is_sold && listing.status !== 'Active'">{{ listing.status }}</span>
+            </div>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title text-truncate">{{ listing.title }}</h5>
+            <p class="card-text text-muted small text-truncate">{{ listing.description }}</p>
+            <div class="mt-auto pt-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="text-primary mb-0">${{ listing.price }}</h5>
+                <small class="text-muted">by {{ listing.shop?.shop_name || 'Anonymous Seller' }}</small>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <small class="text-muted">
+                  <i class="fas fa-eye"></i> {{ listing.view_count || 0 }} views
+                </small>
+                <div class="btn-group" role="group">
+                  <button
+                    class="btn btn-sm"
+                    [class.btn-saved]="isSaved(listing.listing_id)"
+                    [class.btn-unsaved]="!isSaved(listing.listing_id)"
+                    (click)="toggleSaved(listing)">
+                    <i class="fas" [class.fa-bookmark]="isSaved(listing.listing_id)" [class.fa-bookmark-o]="!isSaved(listing.listing_id)"></i>
+                    {{ isSaved(listing.listing_id) ? 'Saved' : 'Save' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-4" *ngIf="pagination.totalPages > 1">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="pagination.currentPage === 1">
+          <a class="page-link" (click)="goToPage(pagination.currentPage - 1)" style="cursor: pointer;">Previous</a>
+        </li>
+        <li class="page-item" [class.active]="page === pagination.currentPage" *ngFor="let page of getPages()">
+          <a class="page-link" (click)="goToPage(page)" style="cursor: pointer;">{{ page }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="pagination.currentPage === pagination.totalPages">
+          <a class="page-link" (click)="goToPage(pagination.currentPage + 1)" style="cursor: pointer;">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

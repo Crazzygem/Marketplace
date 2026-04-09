@@ -1,0 +1,346 @@
+<div class="settings-page">
+  <div class="container-fluid px-0">
+    <!-- Page Header -->
+    <div class="settings-header mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-1">{{ isEditing ? 'Edit Product' : 'Add New Product' }}</h2>
+          <p class="text-muted mb-0">
+            {{ isEditing ? 'Update your product details' : 'Create a new product listing' }}
+          </p>
+        </div>
+        <div class="d-flex gap-2">
+          <button
+            class="btn btn-outline-secondary"
+            [routerLink]="['/shop/settings']"
+            [queryParams]="{ tab: 'listings' }"
+          >
+            <i class="fas fa-arrow-left me-2"></i>Back to Listings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Skeleton State -->
+    <div *ngIf="isEditing && !productData.title" class="row">
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+            <app-skeleton [height]="'1.5rem'" [width]="'50%'"></app-skeleton>
+            <div class="row">
+              <div class="col-md-6">
+                <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+              </div>
+              <div class="col-md-6">
+                <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+              </div>
+              <div class="col-md-6">
+                <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+              </div>
+            </div>
+            <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+            <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-3"></app-skeleton>
+            <app-skeleton [height]="'2.5rem'" [width]="'100%'" class="mb-4"></app-skeleton>
+            <app-skeleton [height]="'2.5rem'" [width]="'30%'" class="mb-3"></app-skeleton>
+            <app-skeleton [height]="'2.5rem'" [width]="'30%'"></app-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="row" *ngIf="!isEditing || productData.title">
+      <div class="col-lg-8">
+        <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0">
+                <i class="fas fa-info-circle text-primary me-2"></i>Basic Information
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="title" class="form-label">Product Title *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  [(ngModel)]="productData.title"
+                  required
+                  placeholder="Enter product title"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Description *</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  [(ngModel)]="productData.description"
+                  rows="4"
+                  required
+                  placeholder="Enter product description"
+                ></textarea>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="price" class="form-label">Price ($) *</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="price"
+                      name="price"
+                      [(ngModel)]="productData.price"
+                      required
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="stock_quantity" class="form-label">Stock Quantity *</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="stock_quantity"
+                      name="stock_quantity"
+                      [(ngModel)]="productData.stock_quantity"
+                      required
+                      min="0"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0"><i class="fas fa-folder text-primary me-2"></i>Category & Shop</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="category_id" class="form-label">Category</label>
+                    <select
+                      class="form-select"
+                      id="category_id"
+                      name="category_id"
+                      [(ngModel)]="productData.category_id"
+                      required
+                    >
+                      <option value="">Select a category</option>
+                      <option *ngFor="let category of categories" [value]="category.category_id">
+                        <i class="fas {{ category.icon || 'fa-tag' }} me-2"></i>
+                        {{ category.category_name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="shop_id" class="form-label">Shop</label>
+                    <select
+                      class="form-select"
+                      id="shop_id"
+                      name="shop_id"
+                      [(ngModel)]="productData.shop_id"
+                    >
+                      <option [ngValue]="null">No Shop (Independent Listing)</option>
+                      <option *ngIf="userShop" [ngValue]="userShop.shop_id">
+                        {{ userShop.shop_name || 'My Shop' }}
+                      </option>
+                    </select>
+                    <div class="form-text">
+                      Choose a shop to list under, or select "No Shop" for an independent listing
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0"><i class="fas fa-toggle-on text-primary me-2"></i>Status</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center gap-3">
+                <select
+                  class="form-select"
+                  id="status"
+                  name="status"
+                  style="max-width: 200px"
+                  [(ngModel)]="productData.status"
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+                <app-badge
+                  [text]="productData.status"
+                  [variant]="getStatusBadgeVariant(productData.status)"
+                >
+                </app-badge>
+                <span class="text-muted small"
+                  >Set "Active" to show on homepage, or "Inactive" to hide it.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0"><i class="fas fa-images text-primary me-2"></i>Product Images</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <input
+                  type="file"
+                  class="form-control"
+                  id="imageUpload"
+                  multiple
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                />
+                <div class="form-text">Select one or more images for your product (JPG, PNG)</div>
+              </div>
+
+              <div class="row" *ngIf="previewUrls.length > 0">
+                <div class="col-md-3 mb-3" *ngFor="let previewUrl of previewUrls; let i = index">
+                  <div class="position-relative image-preview-wrapper">
+                    <img [src]="previewUrl" class="img-thumbnail" alt="Preview" />
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm position-absolute"
+                      style="top: 4px; right: 4px"
+                      (click)="removeImage(i)"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="previewUrls.length === 0" class="text-center py-4 text-muted">
+                <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                <p class="mb-0">No images uploaded yet. Select images above to add.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerts -->
+          <div class="mb-3">
+            <app-alert
+              *ngIf="successMessage"
+              variant="success"
+              [title]="'Success'"
+              [description]="successMessage"
+              [showIcon]="true"
+            >
+            </app-alert>
+            <app-alert
+              *ngIf="errorMessage"
+              variant="danger"
+              [title]="'Error'"
+              [description]="errorMessage"
+              [showIcon]="true"
+            >
+            </app-alert>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+              ></span>
+              <i
+                *ngIf="!loading"
+                class="fas me-2"
+                [ngClass]="isEditing ? 'fa-save' : 'fa-plus'"
+              ></i>
+              {{ isEditing ? 'Update Product' : 'Save Product' }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="resetForm()"
+              *ngIf="!isEditing"
+            >
+              <i class="fas fa-undo me-2"></i>Reset
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="deleteCurrentProduct()"
+              *ngIf="isEditing"
+            >
+              <i class="fas fa-trash me-2"></i>Delete
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-lg-4">
+        <!-- Tips Card -->
+        <div class="card shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-lightbulb text-primary me-2"></i>Tips for Success</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled mb-0">
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                <span>Use clear, descriptive titles</span>
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                <span>Include detailed descriptions</span>
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                <span>Set competitive prices</span>
+              </li>
+              <li class="mb-2">
+                <i class="fas fa-check text-success me-2"></i>
+                <span>Keep accurate stock levels</span>
+              </li>
+              <li>
+                <i class="fas fa-check text-success me-2"></i>
+                <span>Add high-quality product photos</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-info-circle text-primary me-2"></i>Quick Info</h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-2"><strong>*</strong> indicates required fields</p>
+            <p class="text-muted small mb-0">
+              Set "Active" to show on homepage, or "Inactive" to hide it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

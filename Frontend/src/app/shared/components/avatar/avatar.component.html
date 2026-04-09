@@ -1,0 +1,9 @@
+<div class="avatar" [ngClass]="sizeClass()" *ngIf="hasImage(); else fallbackTpl">
+  <img [src]="imageSrc" [alt]="name" />
+</div>
+
+<ng-template #fallbackTpl>
+  <div class="avatar avatar-fallback" [ngClass]="sizeClass()" aria-label="Avatar for {{ name }}">
+    {{ initials() }}
+  </div>
+</ng-template>

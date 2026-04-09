@@ -1,0 +1,12 @@
+<div class="empty-state">
+  <i class="fas {{ icon }} empty-state-icon" aria-hidden="true"></i>
+  <h3 class="empty-state-title" *ngIf="title">{{ title }}</h3>
+  <p class="empty-state-description" *ngIf="description">{{ description }}</p>
+  <button 
+    *ngIf="hasAction()" 
+    type="button" 
+    class="btn btn-semantic-primary"
+    (click)="onActionClick()">
+    {{ actionText }}
+  </button>
+</div>

@@ -1,0 +1,148 @@
+/* Product Management Component Styles */
+
+.settings-page .card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.settings-page .card-header {
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.settings-page .card-header h5 {
+  color: var(--foreground);
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-page .card-body {
+  padding: 1.5rem;
+}
+
+.settings-page .form-label {
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.settings-page .form-control,
+.settings-page .form-select {
+  border: 1px solid var(--input);
+  border-radius: var(--radius-md);
+  padding: 0.625rem 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.settings-page .form-control:focus,
+.settings-page .form-select:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+  outline: none;
+}
+
+.settings-page .form-text {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.settings-page .btn {
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  padding: 0.625rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.settings-page .btn:hover {
+  transform: translateY(-1px);
+}
+
+.settings-page .btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.settings-page .btn-primary:hover {
+  background-color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+.settings-page .btn-outline-secondary {
+  border-color: var(--border);
+  color: var(--muted-foreground);
+}
+
+.settings-page .btn-outline-secondary:hover {
+  background-color: var(--muted);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.settings-page .btn-outline-danger {
+  border-color: var(--destructive);
+  color: var(--destructive);
+}
+
+.settings-page .btn-outline-danger:hover {
+  background-color: var(--destructive);
+  color: white;
+}
+
+.image-preview-wrapper {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.image-preview-wrapper img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.image-preview-wrapper .btn-danger {
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-success {
+  color: var(--success) !important;
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: text-bottom;
+  border: 0.125em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+
+.spinner-border-sm {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-width: 0.1em;
+}
+
+@keyframes spinner-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .settings-page .col-lg-4 {
+    margin-top: 1.5rem;
+  }
+}

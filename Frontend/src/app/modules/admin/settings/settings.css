@@ -1,0 +1,284 @@
+/* Settings Page Styles */
+
+.settings-header {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-header h2 {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* Sidebar Navigation */
+.settings-nav {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: none;
+}
+
+.settings-nav .nav-link {
+  padding: 1rem 1.25rem;
+  border-radius: 0;
+  color: var(--muted-foreground);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+.settings-nav .nav-link:hover {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.settings-nav .nav-link.active {
+  background-color: rgba(15, 23, 42, 0.1);
+  color: var(--primary);
+  border-left-color: var(--primary);
+}
+
+.settings-nav .nav-link i {
+  width: 20px;
+  text-align: center;
+}
+
+/* Card Styling */
+.settings-page .card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.settings-page .card-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-page .card-header h5 {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* Category Item */
+.category-item {
+  background-color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.category-item:hover {
+  background-color: rgba(15, 23, 42, 0.1);
+  transform: translateX(4px);
+}
+
+.category-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Payment Method Item */
+.payment-method-item {
+  transition: all 0.2s ease;
+}
+
+.payment-method-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.payment-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--foreground) 100%);
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+  color: var(--primary-foreground);
+}
+
+/* Shipping Zone Card */
+.shipping-zone-card {
+  transition: all 0.2s ease;
+}
+
+.shipping-zone-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Form Controls */
+.settings-page .form-control,
+.settings-page .form-select {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input);
+  padding: 0.625rem 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.settings-page .form-control:focus,
+.settings-page .form-select:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+}
+
+.settings-page .input-group-text {
+  border-radius: var(--radius-md);
+  background-color: var(--muted);
+  border: 1px solid var(--input);
+}
+
+/* Form Switch */
+.form-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.form-switch .form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Badges */
+.settings-page .badge {
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+  border-radius: var(--radius-sm);
+}
+
+/* Button Styles */
+.settings-page .btn {
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.settings-page .btn:hover {
+  transform: translateY(-1px);
+}
+
+.settings-page .btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.settings-page .btn-primary:hover {
+  background-color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .settings-nav {
+    margin-bottom: 1.5rem;
+  }
+
+  .settings-nav .nav {
+    flex-direction: row !important;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .settings-nav .nav-link {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .settings-nav .nav-link.active {
+    border-left: none;
+    border-bottom-color: var(--primary);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-page .card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-dialog {
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  opacity: 1 !important;
+}
+
+.modal-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header .modal-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Dropdown Item */
+.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Star Button Animation */
+.btn-link.text-warning i {
+  transition: transform 0.2s ease;
+}
+
+.btn-link.text-warning:hover i {
+  transform: scale(1.2);
+}

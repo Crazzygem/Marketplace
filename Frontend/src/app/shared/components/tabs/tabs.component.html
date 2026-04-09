@@ -1,0 +1,19 @@
+<div class="tabs" role="tablist" aria-label="Navigation tabs">
+  <button
+    *ngFor="let tab of tabs"
+    type="button"
+    class="tab-trigger"
+    [class.active]="tab.value === activeTab"
+    (click)="onTabClick(tab.value)"
+    [attr.aria-selected]="tab.value === activeTab"
+    [attr.aria-controls]="'tab-panel-' + tab.value"
+    role="tab"
+    [id]="'tab-' + tab.value">
+    <i *ngIf="getTabIcon(tab)" class="{{ getTabIcon(tab) }} me-2" aria-hidden="true"></i>
+    {{ tab.label }}
+  </button>
+</div>
+
+<div class="tab-content" role="tabpanel" [attr.aria-labelledby]="'tab-' + activeTab">
+  <ng-content></ng-content>
+</div>

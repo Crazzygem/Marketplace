@@ -1,0 +1,15 @@
+<div 
+  class="alert d-flex align-items-start" 
+  [ngClass]="variantClass" 
+  role="alert"
+  *ngIf="hasContent">
+  <i 
+    *ngIf="showIcon" 
+    class="fas {{ iconClass }} me-2 mt-1" 
+    aria-hidden="true">
+  </i>
+  <div class="alert-content">
+    <strong *ngIf="title" class="d-block mb-1">{{ title }}</strong>
+    <span *ngIf="description">{{ description }}</span>
+  </div>
+</div>

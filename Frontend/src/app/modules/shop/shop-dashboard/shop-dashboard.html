@@ -1,0 +1,217 @@
+<div class="container-fluid px-0">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Shop Dashboard</h2>
+      <div>
+        <button class="btn btn-outline-dark" routerLink="/shop/settings">
+          <i class="fas fa-cog me-2"></i>Shop Management
+        </button>
+      </div>
+    </div>
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && shopStats">
+      <!-- Shop Stats Cards -->
+      <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="d-flex align-items-center mb-1">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase me-2">
+                      Total Views
+                    </div>
+                    <app-badge variant="default" [text]="'Active'" [dot]="true"></app-badge>
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    {{ shopStats.stats?.total_views || 0 }}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-eye fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="d-flex align-items-center mb-1">
+                    <div class="text-xs font-weight-bold text-success text-uppercase me-2">
+                      Total Sales
+                    </div>
+                    <app-badge variant="success" [text]="'Active'" [dot]="true"></app-badge>
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    ${{ shopStats.stats?.total_sales || 0 }}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="d-flex align-items-center mb-1">
+                    <div class="text-xs font-weight-bold text-info text-uppercase me-2">
+                      Items Listed
+                    </div>
+                    <app-badge variant="info" [text]="'Active'" [dot]="true"></app-badge>
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    {{ shopStats.stats?.items_listed || 0 }}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-box fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="d-flex align-items-center mb-1">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase me-2">
+                      Active Orders
+                    </div>
+                    <app-badge variant="warning" [text]="'Active'" [dot]="true"></app-badge>
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    {{ shopStats.stats?.active_orders || 0 }}
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shop Information -->
+      <div class="row mb-4">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header bg-light">
+              <h4 class="mb-0">Shop Information</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <h5>{{ shopStats.shop_details?.shop_name }}</h5>
+                  <p class="text-muted">{{ shopStats.shop_details?.description }}</p>
+                  <div class="d-flex gap-2">
+                    <span class="badge bg-info">{{ shopStats.shop_details?.status }}</span>
+                    <span class="badge bg-secondary"
+                      >{{ shopStats.shop_details?.subscription_tier }} Tier</span
+                    >
+                  </div>
+                </div>
+                <div class="col-md-4 text-end">
+                  <button class="btn btn-outline-primary">Edit Shop Info</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts and Analytics -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+              <h4 class="mb-0">Sales Overview (30 Days)</h4>
+            </div>
+            <div class="card-body">
+              <canvas baseChart [data]="salesChartData" [options]="chartOptions" [type]="'line'">
+              </canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header bg-light">
+              <h4 class="mb-0">Revenue (30 Days)</h4>
+            </div>
+            <div class="card-body">
+              <canvas baseChart [data]="revenueChartData" [options]="chartOptions" [type]="'bar'">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card mb-4">
+            <div class="card-header bg-light">
+              <h4 class="mb-0">Top Selling Items</h4>
+            </div>
+            <div class="card-body">
+              <canvas
+                baseChart
+                [data]="topSellingItemsData"
+                [options]="chartOptions"
+                [type]="'bar'"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-header bg-light">
+              <h4 class="mb-0">Top Items by Views</h4>
+            </div>
+            <div class="card-body">
+              <div class="list-group list-group-flush">
+                <div
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                  *ngFor="let item of shopStats.charts?.top_items_by_views"
+                >
+                  <div>
+                    <h6 class="mb-0">{{ item.title }}</h6>
+                    <small class="text-muted">Views: {{ item.view_count }}</small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{ item.view_count }}</span>
+                </div>
+                <div
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                  *ngIf="!shopStats.charts?.top_items_by_views?.length"
+                >
+                  <span class="text-muted">No items listed yet</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !shopStats" class="alert alert-warning">
+      <h4 class="alert-heading">No Shop Data Available</h4>
+      <p>It looks like you don't have a shop yet. Would you like to create one?</p>
+      <button class="btn btn-primary" routerLink="/shop/create">Create Shop</button>
+    </div>
+  </div>
+</div>

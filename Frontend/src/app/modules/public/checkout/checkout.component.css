@@ -1,0 +1,15 @@
+/* Checkout component styles */
+.card {
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card-header {
+  background-color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}

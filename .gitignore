@@ -2,7 +2,7 @@
 # Marketplace Platform - Root .gitignore
 # =============================================================================
 
-# --- AI / Agent generated files (not part of project source) ---
+# --- AI / Agent generated files ---
 AGENTS.md
 COMPONENT_REFERENCE.md
 PAGE_INVENTORY.md
@@ -10,6 +10,10 @@ UI_RULES.md
 skills-lock.json
 .agents/
 plans/
+.tmp/
+Documentation/
+project/
+ui/
 
 # --- Environment ---
 .env
@@ -30,3 +34,36 @@ Thumbs.db
 # --- Docker volumes (local data) ---
 mysql-data/
 redis-data/
+
+# =============================================================================
+# Backend (Laravel / PHP)
+# =============================================================================
+Backend/vendor/
+Backend/node_modules/
+Backend/composer.lock
+Backend/package-lock.json
+Backend/storage/framework/cache/*
+Backend/storage/framework/sessions/*
+Backend/storage/framework/views/*
+Backend/storage/logs/*
+Backend/bootstrap/cache/*
+Backend/.phpunit.result.cache
+Backend/build/
+Backend/public/build/
+Backend/public/hot
+Backend/public/storage
+Backend/get_token.php
+
+# =============================================================================
+# Frontend (Angular / TypeScript)
+# =============================================================================
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.angular/
+Frontend/.cache/
+Frontend/package-lock.json
+
+# =============================================================================
+# Nginx / Docker
+# =============================================================================
+nginx/ssl/

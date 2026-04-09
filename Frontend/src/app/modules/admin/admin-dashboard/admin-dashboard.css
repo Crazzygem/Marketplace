@@ -1,0 +1,13 @@
+/* Admin Dashboard Styles */
+.card {
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card-header {
+  background-color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Note: .bg-primary, .bg-success, .bg-warning, .bg-info are now 
+   handled by tokens.css with shadcn design tokens */

@@ -1,0 +1,55 @@
+<div class="container-fluid px-0">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Saved Items</h2>
+      <button
+        class="btn btn-outline-danger"
+        (click)="clearSavedItems()"
+        *ngIf="!loading() && savedItems.length > 0">
+        Clear All
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" *ngFor="let item of [1, 2, 3, 4, 5, 6]">
+        <div class="card">
+          <app-skeleton height="200px" width="100%"></app-skeleton>
+          <div class="card-body">
+            <app-skeleton height="1.5rem" width="80%" class="mb-2"></app-skeleton>
+            <app-skeleton height="1rem" width="60%" class="mb-3"></app-skeleton>
+            <app-skeleton height="2rem" width="40%" class="mb-2"></app-skeleton>
+            <app-skeleton height="1rem" width="30%"></app-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <app-empty-state
+      *ngIf="!loading() && savedItems.length === 0"
+      icon="fa-bookmark"
+      [title]="'No saved items'"
+      [description]="'You haven\'t saved any items yet'"
+      [actionText]="'Discover Products'"
+      (action)="navigateToHome()">
+    </app-empty-state>
+
+    <!-- Saved Items List -->
+    <div *ngIf="!loading() && savedItems.length > 0">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col" *ngFor="let item of savedItems">
+          <app-listing-card
+            [listing]="item.listing"
+            [isSaved]="true"
+            [showSaveButton]="true"
+            [showStatusBadge]="true"
+            [showViewCount]="true"
+            (onSaveToggle)="handleSaveToggle($event)"
+            (onView)="viewItem($event)">
+          </app-listing-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

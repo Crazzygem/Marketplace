@@ -1,0 +1,54 @@
+# Dependencies
+vendor/
+node_modules/
+
+# Build artifacts
+public/hot
+public/storage
+storage/*.key
+
+# Environment files (use .env.docker instead)
+.env
+.env.backup
+.env.local
+.env.*.local
+
+# Cache and logs
+.phpunit.result.cache
+storage/logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+README.md
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Tests
+tests/
+phpunit.xml
+
+# Development files
+.editorconfig
+boost.json
+get_token.php
+package.json
+package-lock.json

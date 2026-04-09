@@ -1,0 +1,63 @@
+<div class="icon-picker-container">
+  <!-- Selected Icon Display -->
+  <div class="selected-icon-display" (click)="openModal()">
+    <i class="fas {{ selectedIcon }} fa-lg"></i>
+    <span class="icon-label">{{ selectedIconItem?.label || 'Select Icon' }}</span>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+
+  <!-- Icon Selection Modal -->
+  <div class="icon-modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <div class="icon-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h5>Select Icon</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Search -->
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search icons..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)">
+        </div>
+
+        <!-- Current Selection -->
+        <div class="current-selection">
+          <span class="label">Selected:</span>
+          <div class="selected-preview">
+            <i class="fas {{ selectedIcon }}"></i>
+            <span>{{ selectedIconItem?.label || selectedIcon }}</span>
+          </div>
+        </div>
+
+        <!-- Icon Grid -->
+        <div class="icon-grid">
+          <div
+            *ngFor="let icon of filteredIcons()"
+            class="icon-item"
+            [class.selected]="selectedIcon === icon.icon"
+            (click)="selectIcon(icon.icon)"
+            [title]="icon.label">
+            <i class="fas {{ icon.icon }}"></i>
+          </div>
+        </div>
+
+        <div *ngIf="filteredIcons().length === 0" class="no-results">
+          <p>No icons found matching "{{ searchQuery() }}"</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="closeModal()">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

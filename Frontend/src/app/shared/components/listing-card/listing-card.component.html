@@ -1,0 +1,49 @@
+<div class="card h-100 listing-card">
+  <div class="position-relative">
+    <div class="card-img-container">
+      <a [routerLink]="['/public/product', listing.listing_id]" (click)="handleView()">
+        <img
+          *ngIf="getImageUrl(listing.image_urls)"
+          [src]="getImageUrl(listing.image_urls)"
+          class="card-img-top"
+          alt="{{ listing.title }}">
+        <div *ngIf="!getImageUrl(listing.image_urls)" class="card-img-top no-image-placeholder d-flex align-items-center justify-content-center" style="background-color: var(--muted);">
+          <span class="text-muted">No Image</span>
+        </div>
+      </a>
+    </div>
+    <div class="position-absolute top-0 start-0 m-2" *ngIf="showStatusBadge">
+      <app-badge
+        [variant]="getStatusVariant(listing.status, listing.is_sold)"
+        [text]="getStatusText(listing.status, listing.is_sold)"></app-badge>
+    </div>
+  </div>
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title text-truncate">{{ listing.title }}</h5>
+    <p class="card-text text-muted small text-truncate">{{ listing.description }}</p>
+    <div class="mt-auto pt-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="text-primary mb-0">${{ listing.price }}</h5>
+        <small class="text-muted">by {{ listing.shop?.shop_name || 'Anonymous Seller' }}</small>
+      </div>
+       <div class="d-flex justify-content-between align-items-center mt-2">
+         <small class="text-muted" *ngIf="showViewCount">
+           <i class="fas fa-eye"></i> {{ listing.view_count || 0 }} views
+            <span *ngIf="listing.sales_count && listing.sales_count > 0" class="ms-2">
+             <i class="fas fa-shopping-bag"></i> {{ listing.sales_count }} sold
+           </span>
+         </small>
+        <div class="btn-group" role="group" *ngIf="showSaveButton">
+          <button
+            class="btn btn-sm"
+            [class.btn-saved]="isSaved"
+            [class.btn-unsaved]="!isSaved"
+            (click)="handleSaveToggle($event)">
+            <i class="fas" [class.fa-bookmark]="isSaved" [class.fa-bookmark-o]="!isSaved"></i>
+            {{ isSaved ? 'Saved' : 'Save' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

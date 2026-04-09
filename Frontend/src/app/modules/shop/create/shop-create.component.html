@@ -1,0 +1,128 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div
+          class="card-header"
+          style="background-color: var(--primary); color: var(--primary-foreground)"
+        >
+          <h3 class="mb-0">Create Your Shop</h3>
+        </div>
+        <div class="card-body">
+          <app-alert variant="info" [title]="'Why Create a Shop?'" [showIcon]="true" class="mb-4">
+            <ul class="mb-0 ps-3">
+              <li><strong>Brand Identity:</strong> Build a recognizable brand for your business</li>
+              <li>
+                <strong>Organized Inventory:</strong> Group your products under one shop for easier
+                management
+              </li>
+              <li>
+                <strong>Professional Appearance:</strong> Customers can browse your entire inventory
+              </li>
+              <li>
+                <strong>Shop Analytics:</strong> Track performance of your entire shop, not just
+                individual items
+              </li>
+              <li>
+                <strong>Staff Management:</strong> Add team members to help manage your listings
+              </li>
+            </ul>
+            <p class="mb-0 mt-2">
+              <em>Note: You can still create individual listings without a shop if you prefer.</em>
+            </p>
+          </app-alert>
+
+          <form (ngSubmit)="createShop()" #shopForm="ngForm">
+            <div class="mb-3">
+              <label for="shopName" class="form-label">Shop Name *</label>
+              <input
+                type="text"
+                class="form-control"
+                id="shopName"
+                name="shopName"
+                [(ngModel)]="shopData.shop_name"
+                required
+                placeholder="Enter your shop name"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                [(ngModel)]="shopData.description"
+                rows="4"
+                placeholder="Describe your shop and what you sell"
+              >
+              </textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select
+                class="form-select"
+                id="category"
+                name="category"
+                [(ngModel)]="shopData.category"
+              >
+                <option value="General"><i class="fas fa-box me-2"></i> General</option>
+                <option value="Electronics">
+                  <i class="fas fa-mobile-alt me-2"></i> Electronics
+                </option>
+                <option value="Fashion"><i class="fas fa-tshirt me-2"></i> Fashion</option>
+                <option value="Home &amp; Garden">
+                  <i class="fas fa-home me-2"></i> Home &amp; Garden
+                </option>
+                <option value="Sports"><i class="fas fa-running me-2"></i> Sports</option>
+                <option value="Books"><i class="fas fa-book me-2"></i> Books</option>
+                <option value="Other"><i class="fas fa-tag me-2"></i> Other</option>
+              </select>
+            </div>
+
+            <app-alert
+              *ngIf="errorMessage"
+              variant="danger"
+              [title]="'Error'"
+              [description]="errorMessage"
+              [showIcon]="true"
+            ></app-alert>
+
+            <app-alert
+              *ngIf="successMessage"
+              variant="success"
+              [title]="'Success'"
+              [description]="successMessage"
+              [showIcon]="true"
+            ></app-alert>
+
+            <div class="d-flex gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary flex-fill"
+                [disabled]="loading || !shopForm.form.valid"
+              >
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                ></span>
+                <span *ngIf="loading">Creating Shop...</span>
+                <span *ngIf="!loading">Create Shop</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="cancel()"
+                [disabled]="loading"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

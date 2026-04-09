@@ -1,0 +1,300 @@
+<div class="profile-page">
+  <div class="container py-4">
+    <div class="row g-4">
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <!-- Profile Card -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body text-center p-4">
+            <app-avatar
+              [imageSrc]="currentUser?.avatar_url"
+              [name]="currentUser?.name"
+              size="xl"
+            ></app-avatar>
+            <h4 class="mb-1">{{ currentUser?.name }}</h4>
+            <p class="text-muted mb-3">{{ currentUser?.email }}</p>
+            <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap">
+              <app-badge variant="default" [text]="currentUser?.role"></app-badge>
+              <app-badge
+                variant="success"
+                [text]="'Verified'"
+                *ngIf="currentUser?.is_verified"
+              ></app-badge>
+            </div>
+            <button
+              class="btn btn-outline-primary w-100"
+              (click)="goToShop()"
+              *ngIf="!authService.isShopOwner()"
+            >
+              Become a Seller
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h6 class="text-muted mb-3">Statistics</h6>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Orders</span>
+              <strong>{{ orders.length }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Reviews</span>
+              <strong>0</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Wishlist</span>
+              <strong>0</strong>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between">
+              <span>Member since</span>
+              <strong>{{ currentUser?.created_at | date: 'MMM yyyy' }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-8">
+        <!-- Tabs -->
+        <app-tabs
+          [tabs]="tabs"
+          [(activeTab)]="activeTab"
+          (activeTabChange)="setActiveTab($event)"
+        ></app-tabs>
+
+        <!-- Overview Tab -->
+        <div class="card shadow-sm mb-4 tab-content-card" *ngIf="activeTab === 'overview'">
+          <div class="card-header bg-transparent">
+            <h5 class="mb-0">Recent Orders</h5>
+          </div>
+          <div class="card-body p-0">
+            <div *ngIf="loading.orders" class="text-center py-5">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
+            <div *ngIf="!loading.orders && orders.length === 0" class="text-center py-5">
+              <i class="fas fa-shopping-bag text-muted mb-3" style="font-size: 3rem"></i>
+              <h5>You haven't placed any orders yet</h5>
+              <p class="text-muted">Your order history will appear here</p>
+              <a routerLink="/public/home" class="btn btn-primary">Start Shopping</a>
+            </div>
+
+            <div *ngIf="!loading.orders && orders.length > 0" class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Listing</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let order of paginatedOrders" style="cursor: pointer">
+                    <td>
+                      <span class="text-primary fw-medium">
+                        {{ order.listing?.title || 'N/A' }}
+                      </span>
+                    </td>
+                    <td>{{ formatDate(order.created_at) }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>${{ order.total_price }}</td>
+                    <td>
+                      <app-badge
+                        [variant]="getStatusVariant(order.status)"
+                        [text]="order.status"
+                      ></app-badge>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <nav
+              aria-label="Page navigation"
+              class="mt-4"
+              *ngIf="!loading.orders && orders.length > 0 && pagination.totalPages > 1"
+            >
+              <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="pagination.currentPage === 1">
+                  <a
+                    class="page-link"
+                    (click)="goToPage(pagination.currentPage - 1)"
+                    style="cursor: pointer"
+                    >Previous</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  [class.active]="page === pagination.currentPage"
+                  *ngFor="let page of getPages()"
+                >
+                  <a class="page-link" (click)="goToPage(page)" style="cursor: pointer">
+                    {{ page }}
+                  </a>
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="pagination.currentPage === pagination.totalPages"
+                >
+                  <a
+                    class="page-link"
+                    (click)="goToPage(pagination.currentPage + 1)"
+                    style="cursor: pointer"
+                    >Next</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Personal Info Tab -->
+        <div class="card shadow-sm mb-4 tab-content-card" *ngIf="activeTab === 'personal'">
+          <div class="card-header bg-transparent">
+            <h5 class="mb-0">Personal Information</h5>
+          </div>
+          <div class="card-body">
+            <app-alert
+              *ngIf="nameAlert.show"
+              [variant]="nameAlert.variant"
+              [title]="nameAlert.title"
+              [description]="nameAlert.description"
+              [showIcon]="true"
+            ></app-alert>
+            <form *ngIf="!isEditingName">
+              <div class="row mb-3">
+                <div class="col-sm-4 text-muted">Full Name</div>
+                <div class="col-sm-8">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="fw-medium">{{ currentUser?.name }}</span>
+                    <button class="btn btn-sm btn-link text-muted p-0" (click)="enableNameEdit()">
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-4 text-muted">Email Address</div>
+                <div class="col-sm-8">
+                  <span>{{ currentUser?.email }}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-4 text-muted">Account Type</div>
+                <div class="col-sm-8">
+                  <app-badge variant="default" [text]="currentUser?.role"></app-badge>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-4 text-muted">Verification Status</div>
+                <div class="col-sm-8">
+                  <app-badge
+                    variant="default"
+                    [text]="'Verified'"
+                    *ngIf="currentUser?.is_verified"
+                  ></app-badge>
+                  <app-badge
+                    variant="secondary"
+                    [text]="'Not Verified'"
+                    *ngIf="!currentUser?.is_verified"
+                  ></app-badge>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 text-muted">Member Since</div>
+                <div class="col-sm-8">
+                  <span>{{ currentUser?.created_at | date: 'MMM dd, yyyy' }}</span>
+                </div>
+              </div>
+            </form>
+
+            <form *ngIf="isEditingName">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Full Name</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="editName"
+                    placeholder="Enter your name"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-9 offset-sm-3">
+                  <button class="btn btn-primary" (click)="saveName()">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                  </button>
+                  <button class="btn btn-outline-secondary" (click)="cancelNameEdit()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Security Tab -->
+        <div class="card shadow-sm tab-content-card" *ngIf="activeTab === 'security'">
+          <div class="card-header bg-transparent">
+            <h5 class="mb-0">Change Password</h5>
+          </div>
+          <div class="card-body">
+            <app-alert
+              *ngIf="passwordAlert.show"
+              [variant]="passwordAlert.variant"
+              [title]="passwordAlert.title"
+              [description]="passwordAlert.description"
+              [showIcon]="true"
+            ></app-alert>
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Current Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [(ngModel)]="passwordForm.currentPassword"
+                  placeholder="Enter current password"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [(ngModel)]="passwordForm.newPassword"
+                  placeholder="Enter new password"
+                />
+                <small class="text-muted">Must be at least 6 characters</small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Confirm New Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  [(ngModel)]="passwordForm.confirmPassword"
+                  placeholder="Confirm new password"
+                />
+              </div>
+              <div class="row">
+                <div class="col-sm-9 offset-sm-3">
+                  <button type="button" class="btn btn-primary" (click)="changePassword()">
+                    <i class="fas fa-key me-2"></i>Update Password
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

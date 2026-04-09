@@ -1,0 +1,4 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Import design tokens (semantic color variables) */
+@import url('./styles/tokens.css');

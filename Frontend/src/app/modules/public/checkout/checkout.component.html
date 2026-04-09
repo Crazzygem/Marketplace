@@ -1,0 +1,354 @@
+<div class="container-fluid px-0">
+  <div class="container py-4">
+    <!-- Empty State -->
+    <div *ngIf="savedItems.length === 0" class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <app-empty-state
+          icon="fa-shopping-cart"
+          title="Your cart is empty"
+          description="You don't have any items in your cart. Browse our marketplace to find great products."
+          actionText="Discover Products"
+          (action)="navigateToProducts()"
+        >
+        </app-empty-state>
+      </div>
+    </div>
+
+    <!-- Checkout Form -->
+    <div *ngIf="savedItems.length > 0" class="row">
+      <div class="col-lg-8">
+        <h2 class="mb-4">Checkout</h2>
+
+        <!-- Order Success Alert -->
+        <app-alert
+          *ngIf="showAlert() && alertVariant() === 'success'"
+          variant="success"
+          [title]="alertTitle()"
+          [description]="alertDescription()"
+          [showIcon]="true"
+          class="mb-4"
+        >
+        </app-alert>
+
+        <!-- Error Alert -->
+        <app-alert
+          *ngIf="showAlert() && alertVariant() === 'danger'"
+          variant="danger"
+          [title]="alertTitle()"
+          [description]="alertDescription()"
+          [showIcon]="true"
+          class="mb-4"
+        >
+        </app-alert>
+
+        <!-- Validation Alert -->
+        <app-alert
+          *ngIf="showAlert() && alertVariant() === 'warning'"
+          variant="warning"
+          [title]="alertTitle()"
+          [description]="alertDescription()"
+          [showIcon]="true"
+          class="mb-4"
+        >
+        </app-alert>
+
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h4 class="mb-0">Delivery Information</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  placeholder="First Name"
+                  [(ngModel)]="firstName"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  placeholder="Last Name"
+                  [(ngModel)]="lastName"
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="email@example.com"
+                [(ngModel)]="email"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                placeholder="1234 Main St"
+                [(ngModel)]="shippingAddress"
+              />
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" [(ngModel)]="city" />
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="state" class="form-label">State</label>
+                <select class="form-select" id="state" [(ngModel)]="state">
+                  <option>Select</option>
+                  <option>NY</option>
+                  <option>CA</option>
+                  <option>TX</option>
+                  <option>FL</option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="zip" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="zip" [(ngModel)]="zip" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h4 class="mb-0">Payment Method</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div
+                  class="form-check card p-3 border-2 cursor-pointer"
+                  [class.border-primary]="paymentMethod === 'Credit Card'"
+                >
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="paymentMethod"
+                    id="creditCard"
+                    value="Credit Card"
+                    [(ngModel)]="paymentMethod"
+                  />
+                  <label class="form-check-label w-100" for="creditCard">
+                    <div class="d-flex align-items-center">
+                      <i class="fab fa-cc-visa me-2"></i>
+                      <span>Credit Card</span>
+                      <span *ngIf="paymentMethod === 'Credit Card'" class="badge bg-primary ms-auto"
+                        >Selected</span
+                      >
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div
+                  class="form-check card p-3 border-2 cursor-pointer"
+                  [class.border-primary]="paymentMethod === 'Debit Card'"
+                >
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="paymentMethod"
+                    id="debitCard"
+                    value="Debit Card"
+                    [(ngModel)]="paymentMethod"
+                  />
+                  <label class="form-check-label w-100" for="debitCard">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-credit-card me-2"></i>
+                      <span>Debit Card</span>
+                      <span *ngIf="paymentMethod === 'Debit Card'" class="badge bg-primary ms-auto"
+                        >Selected</span
+                      >
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div
+                  class="form-check card p-3 border-2 cursor-pointer"
+                  [class.border-primary]="paymentMethod === 'PayPal'"
+                >
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="paymentMethod"
+                    id="paypal"
+                    value="PayPal"
+                    [(ngModel)]="paymentMethod"
+                  />
+                  <label class="form-check-label w-100" for="paypal">
+                    <div class="d-flex align-items-center">
+                      <i class="fab fa-paypal me-2"></i>
+                      <span>PayPal</span>
+                      <span *ngIf="paymentMethod === 'PayPal'" class="badge bg-primary ms-auto"
+                        >Selected</span
+                      >
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="paymentMethod === 'Credit Card' || paymentMethod === 'Debit Card'"
+              class="mt-4"
+            >
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="ccName" class="form-label">Name on card</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="ccName"
+                    placeholder="Full name"
+                    [(ngModel)]="cardName"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="ccNumber" class="form-label">Card number</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="ccNumber"
+                    placeholder="0000 0000 0000 0000"
+                    [(ngModel)]="cardNumber"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 mb-3">
+                  <label for="ccExpiration" class="form-label">Expiration</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="ccExpiration"
+                    placeholder="MM/YY"
+                    [(ngModel)]="cardExpiration"
+                  />
+                </div>
+                <div class="col-md-3 mb-3">
+                  <label for="ccCvv" class="form-label">CVV</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="ccCvv"
+                    placeholder="123"
+                    [(ngModel)]="cardCvv"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="sticky-top" style="top: 20px">
+          <!-- Loading Skeleton -->
+          <div *ngIf="isLoading()">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h4 class="mb-0">Order Summary</h4>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <app-skeleton height="1.5rem" width="70%"></app-skeleton>
+                </div>
+                <div class="mb-3">
+                  <app-skeleton height="1.5rem" width="70%"></app-skeleton>
+                </div>
+                <div class="mb-3">
+                  <app-skeleton height="1.5rem" width="70%"></app-skeleton>
+                </div>
+                <hr />
+                <div class="mb-4">
+                  <app-skeleton height="2rem" width="50%"></app-skeleton>
+                </div>
+                <app-skeleton height="3rem" width="100%" class="mb-3"></app-skeleton>
+                <div class="d-flex justify-content-between">
+                  <app-skeleton height="2.5rem" width="48%"></app-skeleton>
+                  <app-skeleton height="2.5rem" width="48%"></app-skeleton>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div *ngIf="!isLoading()">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h4 class="mb-0">Order Summary</h4>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                  <span
+                    >Subtotal ({{ savedItems.length }} item{{
+                      savedItems.length !== 1 ? 's' : ''
+                    }})</span
+                  >
+                  <strong>${{ total.toFixed(2) }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Shipping</span>
+                  <strong>$0.00</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Tax</span>
+                  <strong>$0.00</strong>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between mb-4">
+                  <h5>Total</h5>
+                  <h5>${{ total.toFixed(2) }}</h5>
+                </div>
+
+                <button
+                  class="btn btn-success w-100 mb-3"
+                  (click)="placeOrder()"
+                  [disabled]="!isValidForm() || isLoading()"
+                >
+                  <span *ngIf="!isLoading()">Place Order</span>
+                  <span *ngIf="isLoading()">
+                    <i class="fas fa-spinner fa-spin me-2"></i>Processing...
+                  </span>
+                </button>
+
+                <div class="d-flex justify-content-between">
+                  <a routerLink="/public/saved-items" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Saved Items
+                  </a>
+                  <button class="btn btn-link p-0" (click)="clearSavedItems()">
+                    Clear Saved Items
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Secure Checkout</h5>
+              <p class="card-text text-muted small">
+                <i class="fas fa-lock text-success me-2"></i>
+                Your information is securely encrypted
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,230 @@
+/* Settings Page Styles */
+
+.settings-page {
+  min-height: calc(100vh - 200px);
+}
+
+.settings-header {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-header h2 {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.settings-header p {
+  color: var(--muted-foreground);
+}
+
+/* No Image Placeholder */
+.no-image {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--muted);
+  border-radius: 4px;
+}
+
+.no-image i {
+  font-size: 1.25rem;
+  opacity: 0.5;
+}
+
+/* Action Buttons */
+.btn-group .btn {
+  transition: all 0.2s ease;
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Empty State */
+.empty-state-icon {
+  font-size: 4rem;
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+}
+
+/* Card Styling */
+.settings-page .card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.settings-page .card-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-page .card-header h5 {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* Table Styling */
+.table {
+  border-color: var(--border);
+}
+
+.table thead th {
+  background-color: var(--foreground);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+  background-color: var(--muted);
+}
+
+.table td,
+.table th {
+  border-color: var(--border);
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+/* Form Controls */
+.settings-page .form-control,
+.settings-page .form-select {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input);
+  padding: 0.625rem 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.settings-page .form-control:focus,
+.settings-page .form-select:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+}
+
+.settings-page .input-group-text {
+  border-radius: var(--radius-md);
+  background-color: var(--muted);
+  border: 1px solid var(--input);
+}
+
+/* Form Switch */
+.form-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.form-switch .form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Badges */
+.settings-page .badge {
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+  border-radius: var(--radius-sm);
+}
+
+/* Button Styles */
+.settings-page .btn {
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.settings-page .btn:hover {
+  transform: translateY(-1px);
+}
+
+.settings-page .btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.settings-page .btn-primary:hover {
+  background-color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+/* Payment Method Item */
+.payment-method-item {
+  background-color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.payment-method-item:hover {
+  background-color: rgba(15, 23, 42, 0.1);
+  transform: translateX(4px);
+}
+
+.payment-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--foreground) 100%);
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .settings-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .settings-header .d-flex {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Table Responsive */
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .payment-method-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-page .card {
+  animation: fadeIn 0.3s ease-out;
+}

@@ -1,0 +1,342 @@
+<div class="settings-page">
+  <div class="container-fluid px-0">
+    <!-- Page Header -->
+    <div class="settings-header mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-1">Shop Settings</h2>
+          <p class="text-muted mb-0">Manage your shop, listings, and staff</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary" routerLink="/shop/dashboard">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="row">
+      <!-- Main Content Area -->
+      <div class="col-12">
+        <!-- Alert Message -->
+        <div class="mb-4" *ngIf="alertState.show">
+          <app-alert
+            [variant]="alertState.variant"
+            [title]="alertState.title"
+            [description]="alertState.description"
+            [showIcon]="true"
+          ></app-alert>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="mb-4">
+          <app-tabs [tabs]="tabs" [(activeTab)]="activeTab"></app-tabs>
+        </div>
+
+        <!-- Shop Settings Tab -->
+        <div class="card shadow-sm mb-4" *ngIf="activeTab === 'shop'">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-store text-primary me-2"></i>Shop Information</h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="shopLoading" class="py-4">
+              <app-skeleton height="20rem" width="100%"></app-skeleton>
+            </div>
+            <div *ngIf="!shopLoading && shopData">
+              <form>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Shop Name</label>
+                    <input type="text" class="form-control" [value]="shopData.shop_name" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Shop Status</label>
+                    <app-badge
+                      [text]="shopData.status"
+                      [variant]="getStatusBadgeVariant(shopData.status)"
+                    ></app-badge>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" rows="4">{{ shopData.description }}</textarea>
+                </div>
+                <button type="button" class="btn btn-primary" (click)="saveShopSettings()">
+                  Save Changes
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listings Tab -->
+        <div class="card shadow-sm mb-4" *ngIf="activeTab === 'listings'">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="mb-0"><i class="fas fa-box text-primary me-2"></i>Manage Listings</h5>
+              <small class="text-muted">{{ listings.length }} listing(s)</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="bulkDeleteListings()"
+                [disabled]="selectedListings.size === 0"
+              >
+                <i class="fas fa-trash me-1"></i>Delete Selected ({{ selectedListings.size }})
+              </button>
+              <button class="btn btn-sm btn-primary" routerLink="/shop/products/add">
+                <i class="fas fa-plus me-1"></i>Add Listing
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Loading State -->
+            <div *ngIf="listingsLoading" class="py-5 text-center">
+              <app-skeleton height="20rem" width="100%"></app-skeleton>
+            </div>
+
+            <!-- Error State -->
+            <div
+              *ngIf="errorMessage"
+              class="alert alert-danger d-flex align-items-center"
+              role="alert"
+            >
+              <i class="fas fa-exclamation-circle me-2"></i>
+              {{ errorMessage }}
+            </div>
+
+            <!-- Empty State -->
+            <div
+              *ngIf="!listingsLoading && listings.length === 0 && !errorMessage"
+              class="text-center py-5"
+            >
+              <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+              <h5 class="text-muted">No Listings Yet</h5>
+              <p class="text-muted mb-4">
+                You haven't added any listings yet. Start by adding your first listing.
+              </p>
+              <button class="btn btn-primary" routerLink="/shop/products/add">
+                <i class="fas fa-plus me-2"></i>Add Your First Listing
+              </button>
+            </div>
+
+            <!-- Listings Table -->
+            <div
+              *ngIf="!listingsLoading && listings.length > 0 && !errorMessage"
+              class="table-responsive"
+            >
+              <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                  <tr>
+                    <th width="50"><input type="checkbox" (change)="selectAllListings()" /></th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Shop</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let listing of listings" class="align-middle">
+                    <td>
+                      <input
+                        type="checkbox"
+                        [checked]="selectedListings.has(listing.listing_id)"
+                        (change)="toggleListingSelection(listing.listing_id)"
+                      />
+                    </td>
+                    <td>
+                      <div *ngIf="listing.image_urls && listing.image_urls.length > 0">
+                        <img
+                          [src]="getImageUrl(listing.image_urls)"
+                          [alt]="listing.title"
+                          class="rounded"
+                          style="width: 50px; height: 50px; object-fit: cover"
+                        />
+                      </div>
+                      <div
+                        *ngIf="!listing.image_urls || listing.image_urls.length === 0"
+                        class="no-image"
+                      >
+                        <span class="text-muted"><i class="fas fa-image"></i></span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="fw-medium">{{ listing.title }}</span>
+                      <span *ngIf="listing.is_sold" class="badge bg-danger ms-2">SOLD</span>
+                    </td>
+                    <td>
+                      <span class="text-muted small">
+                        {{ listing.description | slice: 0 : 50
+                        }}{{ listing.description.length > 50 ? '...' : '' }}
+                      </span>
+                    </td>
+                    <td class="fw-medium">${{ listing.price }}</td>
+                    <td>{{ listing.stock_quantity }}</td>
+                    <td>
+                      <app-badge
+                        [text]="listing.status"
+                        [variant]="getStatusBadgeVariant(listing.status)"
+                      ></app-badge>
+                    </td>
+                    <td>
+                      <span class="text-muted small">{{
+                        listing.shop?.shop_name || 'Independent'
+                      }}</span>
+                    </td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <button
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="editListing(listing.listing_id)"
+                          title="Edit"
+                        >
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-outline-warning"
+                          *ngIf="!listing.is_sold"
+                          (click)="markAsSold(listing)"
+                          title="Mark as Sold"
+                        >
+                          <i class="fas fa-check"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-outline-success"
+                          *ngIf="listing.is_sold"
+                          (click)="restock(listing)"
+                          title="Restock"
+                        >
+                          <i class="fas fa-undo"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="deleteListing(listing.listing_id)"
+                          title="Delete"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                      <div class="mt-1" *ngIf="listing.sales_count > 0">
+                        <small class="text-muted">Sold {{ listing.sales_count }}x</small>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Staff Tab -->
+        <div class="card shadow-sm mb-4" *ngIf="activeTab === 'staff'">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-users text-primary me-2"></i>Staff Management</h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="staffLoading" class="py-4">
+              <div *ngFor="let i of [1, 2, 3]" class="mb-3">
+                <div class="d-flex gap-3">
+                  <app-skeleton height="3rem" width="15%"></app-skeleton>
+                  <app-skeleton height="3rem" width="25%"></app-skeleton>
+                  <app-skeleton height="3rem" width="30%"></app-skeleton>
+                  <app-skeleton height="3rem" width="15%"></app-skeleton>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!staffLoading">
+              <!-- Invite Staff Form -->
+              <div class="card bg-light mb-4">
+                <div class="card-body">
+                  <h6 class="mb-3"><i class="fas fa-user-plus me-2"></i>Invite New Staff Member</h6>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <input
+                        type="email"
+                        class="form-control"
+                        [(ngModel)]="staffForm.email"
+                        placeholder="Enter user email address"
+                      />
+                    </div>
+                    <div class="col-md-auto">
+                      <button
+                        class="btn btn-primary"
+                        (click)="inviteStaff()"
+                        [disabled]="staffFormLoading || !staffForm.email.trim()"
+                      >
+                        <span
+                          *ngIf="staffFormLoading"
+                          class="spinner-border spinner-border-sm me-2"
+                        ></span>
+                        <i *ngIf="!staffFormLoading" class="fas fa-plus me-1"></i>
+                        Add Staff
+                      </button>
+                    </div>
+                  </div>
+                  <small class="text-muted"
+                    >Enter email of an existing user to add them as staff.</small
+                  >
+                </div>
+              </div>
+
+              <!-- Staff List -->
+              <div class="table-responsive" *ngIf="staff.length > 0">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="border-0">Name</th>
+                      <th class="border-0">Email</th>
+                      <th class="border-0">Role</th>
+                      <th class="border-0">Joined</th>
+                      <th class="border-0 text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let member of staff" class="align-middle">
+                      <td class="fw-medium">
+                        {{ member.user?.name || 'Unknown' }}
+                        <span *ngIf="member.role === 'owner'" class="badge bg-primary ms-2"
+                          >Owner</span
+                        >
+                      </td>
+                      <td class="text-muted">{{ member.user?.email || 'N/A' }}</td>
+                      <td>
+                        <app-badge
+                          [text]="member.role === 'owner' ? 'Owner' : 'Staff'"
+                          [variant]="member.role === 'owner' ? 'info' : 'secondary'"
+                        ></app-badge>
+                      </td>
+                      <td class="text-muted small">
+                        {{ member.created_at ? (member.created_at | date: 'MMM d, y') : 'N/A' }}
+                      </td>
+                      <td class="text-end">
+                        <button
+                          *ngIf="member.role !== 'owner'"
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="removeStaff(member)"
+                        >
+                          <i class="fas fa-trash me-1"></i>Remove
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="text-center py-5" *ngIf="staff.length === 0">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No Staff Members</h5>
+                <p class="text-muted">Add staff members by entering their email above.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

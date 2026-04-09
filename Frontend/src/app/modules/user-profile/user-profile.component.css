@@ -1,0 +1,227 @@
+/* User Profile Component Styles */
+
+/* Card Styling - Match Admin Dashboard */
+.profile-page .card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.profile-page .card-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+}
+
+.profile-page .card-body {
+  padding: 1.5rem;
+}
+
+/* Avatar */
+.avatar {
+  box-shadow: var(--shadow-md);
+}
+
+/* Navigation Pills */
+.profile-page .nav-pills .nav-link {
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  color: var(--muted-foreground);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-right: 0.5rem;
+}
+
+.profile-page .nav-pills .nav-link:hover {
+  background-color: var(--muted);
+  color: var(--primary);
+}
+
+.profile-page .nav-pills .nav-link.active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow);
+}
+
+/* Form Controls */
+.profile-page .form-control {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input);
+  padding: 0.625rem 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.profile-page .form-control:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+}
+
+.profile-page .form-label {
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+.profile-page .btn {
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.profile-page .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.profile-page .btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.profile-page .btn-primary:hover {
+  background-color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+/* Table Styling */
+.profile-page .table {
+  margin-bottom: 0;
+}
+
+.profile-page .table th {
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-top: none;
+  padding: 1rem 1rem;
+}
+
+.profile-page .table td {
+  padding: 1.25rem 1rem;
+  vertical-align: middle;
+}
+
+.profile-page .table tbody tr {
+  transition: background-color 0.2s ease;
+  min-height: 70px;
+}
+
+.profile-page .table tbody tr:hover {
+  background-color: var(--muted);
+}
+
+/* Badges */
+.profile-page .badge {
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+  border-radius: var(--radius-sm);
+}
+
+/* Stats Section */
+.profile-page .card-body h6 {
+  font-weight: 600;
+  color: var(--foreground);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.profile-page .card-body strong {
+  color: var(--primary);
+}
+
+/* Pagination */
+.profile-page .pagination {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.profile-page .pph age-link {
+  border-radius: var(--radius-sm);
+  margin: 0 3px;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  transition: all 0.2s ease;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.875rem;
+}
+
+.profile-page .page-link:hover {
+  background-color: var(--muted);
+  color: var(--primary);
+}
+
+.profile-page .page-item.active .page-link {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.profile-page .page-item.disabled .page-link {
+  color: var(--muted-foreground);
+  cursor: not-allowed;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .profile-page .nav-pills {
+    flex-direction: row !important;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .profile-page .nav-pills .nav-link {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .profile-page .card-body {
+    padding: 1rem;
+  }
+
+  .profile-page .nav-pills .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .profile-page .avatar {
+    width: 100px !important;
+    height: 100px !important;
+  }
+}
+
+/* Tab Content Cards - Equal Height */
+.profile-page .tab-content-card {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-page .tab-content-card .card-body {
+  flex: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-page .card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Profile Card Specifics */
+.profile-page .card.text-center .btn {
+  margin-top: 0.5rem;
+}
