@@ -5,11 +5,13 @@
 # Usage:
 #   ./deploy.sh              Full deployment (build, start, migrate)
 #   ./deploy.sh --seed       Full deployment with database seeding
+#   ./deploy.sh --no-cache   Full deployment with fresh build (no cache)
 #   ./deploy.sh start        Start containers
 #   ./deploy.sh stop         Stop containers
 #   ./deploy.sh restart      Restart containers
 #   ./deploy.sh logs [svc]   View logs (optional service name)
 #   ./deploy.sh build        Rebuild images
+#   ./deploy.sh build --no-cache  Rebuild with fresh build (no cache)
 #   ./deploy.sh migrate      Run database migrations
 #   ./deploy.sh seed         Seed database
 #   ./deploy.sh artisan      Run artisan command
@@ -19,6 +21,11 @@
 # =============================================================================
 
 set -euo pipefail
+
+# -------------------------------------------------------------------------
+# Global flags
+# -------------------------------------------------------------------------
+NO_CACHE=false
 
 # -------------------------------------------------------------------------
 # Colors
@@ -137,10 +144,15 @@ EOF
 # -------------------------------------------------------------------------
 do_build() {
     info "Building Docker images..."
+    local build_flags=""
+    if [ "$NO_CACHE" = true ]; then
+        info "Building with --no-cache (fresh build)"
+        build_flags="--no-cache"
+    fi
     # Build frontend (API URL is now embedded in environment.production.ts)
-    docker compose build frontend
+    docker compose build $build_flags frontend
     # Build other services
-    docker compose build
+    docker compose build $build_flags
     success "Docker images built"
 }
 
@@ -316,7 +328,25 @@ do_deploy() {
 # -------------------------------------------------------------------------
 # Main entry point
 # -------------------------------------------------------------------------
-case "${1:-deploy}" in
+
+# Parse global flags first
+while [[ "${1:-}" == --* ]]; do
+    case "${1:-}" in
+        --no-cache)
+            NO_CACHE=true
+            ;;
+        *)
+            echo "Unknown flag: $1"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+# Get the command after flags
+CMD="${1:-deploy}"
+
+case "$CMD" in
     deploy)
         do_deploy "${2:-}"
         ;;
@@ -362,19 +392,24 @@ case "${1:-deploy}" in
         echo "Usage: $0 <command> [options]"
         echo ""
         echo "Commands:"
-        echo "  deploy            Full deployment (build, start, migrate)"
-        echo "  deploy --seed     Full deployment with database seeding"
-        echo "  start             Start all containers"
-        echo "  stop              Stop all containers"
-        echo "  restart           Restart all containers"
-        echo "  logs [service]    View logs (optional: frontend, backend, mysql, nginx, redis)"
-        echo "  build             Rebuild Docker images"
-        echo "  migrate           Run database migrations"
-        echo "  seed              Seed the database"
-        echo "  seed-admin       Seed only the admin user"
-        echo "  artisan <cmd>     Run artisan command in backend container"
-        echo "  shell             Open a shell in the backend container"
-        echo "  status            Show container status and URLs"
-        echo "  clean             Remove all containers, volumes, and images"
+        echo "  deploy               Full deployment (build, start, migrate)"
+        echo "  deploy --seed        Full deployment with database seeding"
+        echo "  deploy --no-cache    Full deployment with fresh build (no cache)"
+        echo "  start                Start all containers"
+        echo "  stop                 Stop all containers"
+        echo "  restart              Restart all containers"
+        echo "  logs [service]       View logs (optional: frontend, backend, mysql, nginx, redis)"
+        echo "  build                Rebuild Docker images"
+        echo "  build --no-cache     Rebuild with fresh build (no cache)"
+        echo "  migrate              Run database migrations"
+        echo "  seed                 Seed the database"
+        echo "  seed-admin          Seed only the admin user"
+        echo "  artisan <cmd>        Run artisan command in backend container"
+        echo "  shell                Open a shell in the backend container"
+        echo "  status               Show container status and URLs"
+        echo "  clean                Remove all containers, volumes, and images"
+        echo ""
+        echo "Global Flags:"
+        echo "  --no-cache           Force rebuild without Docker cache"
         ;;
 esac
