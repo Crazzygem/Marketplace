@@ -17,6 +17,11 @@ export class LoginComponent {
 
   email = '';
   password = '';
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
     // Since we're using template-driven forms, we can validate the form in the template

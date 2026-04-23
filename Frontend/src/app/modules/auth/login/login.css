@@ -1,0 +1,16 @@
+.input-group-text {
+  background-color: var(--bs-body-bg);
+  border-left: none;
+}
+
+.input-group .form-control:focus + .input-group-text {
+  border-color: var(--bs-primary);
+}
+
+.input-group-text {
+  cursor: pointer;
+}
+
+.input-group-text:hover {
+  background-color: var(--bs-tertiary-bg);
+}
