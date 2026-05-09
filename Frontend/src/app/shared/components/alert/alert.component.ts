@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type AlertVariant = 'success' | 'danger' | 'warning' | 'info';
@@ -8,6 +8,7 @@ export type AlertVariant = 'success' | 'danger' | 'warning' | 'info';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './alert.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertComponent {
   @Input() variant: AlertVariant = 'info';

@@ -61,7 +61,7 @@ export function getAllImageUrls(imageUrls: string | string[] | null | undefined)
   const urls: string[] = [];
 
   if (Array.isArray(imageUrls)) {
-    imageUrls.forEach(path => {
+    imageUrls.forEach((path) => {
       const fullPath = path.startsWith('listings/') ? path : `listings/${path}`;
       urls.push(`${baseUrl}/storage/${fullPath}`);
     });

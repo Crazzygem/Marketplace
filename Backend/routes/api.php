@@ -93,21 +93,23 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- SHOP MANAGEMENT (Business Logic) ---
     Route::post('/shops', [ShopController::class, 'store']); // Create Shop
     Route::get('/my-shop/stats', [ShopController::class, 'stats']); // Shop Dashboard Charts
+    Route::put('/my-shop', [ShopController::class, 'update']); // Update Shop Details
 
      // --- ADMIN DASHBOARD (Governance) ---
-    // In a real app, you would add middleware here like 'can:admin'
+    // Admin routes require both authentication and admin role
     Route::prefix('admin')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboardStats'])->middleware('admin'); // The BIG Charts
-        Route::get('/users', [AdminController::class, 'getUsers'])->middleware('admin'); // Get all users
-        Route::post('/users', [AdminController::class, 'createUser'])->middleware('admin'); // Create new user
-        Route::put('/users/{id}/role', [AdminController::class, 'updateUserRole'])->middleware('admin'); // Update user role
-        Route::post('/users/{id}/ban', [AdminController::class, 'banUser'])->middleware('admin'); // Control
-        Route::post('/users/{id}/unban', [AdminController::class, 'unbanUser'])->middleware('admin'); // Control
-        Route::post('/shops/{id}/verify', [AdminController::class, 'verifyShop'])->middleware('admin'); // Control
+        Route::get('/dashboard', [AdminController::class, 'dashboardStats'])->middleware(['auth:sanctum', 'admin']); // The BIG Charts
+        Route::get('/users', [AdminController::class, 'getUsers'])->middleware(['auth:sanctum', 'admin']); // Get all users
+        Route::post('/users', [AdminController::class, 'createUser'])->middleware(['auth:sanctum', 'admin']); // Create new user
+        Route::put('/users/{id}/role', [AdminController::class, 'updateUserRole'])->middleware(['auth:sanctum', 'admin']); // Update user role
+        Route::post('/users/{id}/ban', [AdminController::class, 'banUser'])->middleware(['auth:sanctum', 'admin']); // Control
+        Route::post('/users/{id}/unban', [AdminController::class, 'unbanUser'])->middleware(['auth:sanctum', 'admin']); // Control
+        Route::delete('/users/{id}', [AdminController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']); // Delete user
+        Route::post('/shops/{id}/verify', [AdminController::class, 'verifyShop'])->middleware(['auth:sanctum', 'admin']); // Control
 
         // ADMIN MODERATION
-        Route::get('/reports', [AdminController::class, 'getReports'])->middleware('admin');
-        Route::post('/reports/{id}/resolve', [AdminController::class, 'resolveReport'])->middleware('admin');
+        Route::get('/reports', [AdminController::class, 'getReports'])->middleware(['auth:sanctum', 'admin']);
+        Route::post('/reports/{id}/resolve', [AdminController::class, 'resolveReport'])->middleware(['auth:sanctum', 'admin']);
     });
 
 

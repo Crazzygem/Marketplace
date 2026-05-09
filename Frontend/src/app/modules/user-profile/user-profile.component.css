@@ -138,7 +138,7 @@
   margin-top: 0.5rem;
 }
 
-.profile-page .pph age-link {
+.profile-page .page-link {
   border-radius: var(--radius-sm);
   margin: 0 3px;
   border: 1px solid var(--border);

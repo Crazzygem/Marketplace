@@ -115,32 +115,6 @@
   color: var(--success) !important;
 }
 
-.spinner-border {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  vertical-align: text-bottom;
-  border: 0.125em solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spinner-border 0.75s linear infinite;
-}
-
-.spinner-border-sm {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-width: 0.1em;
-}
-
-@keyframes spinner-border {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 991.98px) {
   .settings-page .col-lg-4 {
     margin-top: 1.5rem;

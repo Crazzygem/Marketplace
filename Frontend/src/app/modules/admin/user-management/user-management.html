@@ -69,11 +69,17 @@
           </app-badge>
         </td>
         <td>
-          <button class="btn btn-sm"
-            [ngClass]="user.is_banned ? 'btn-success' : 'btn-danger'"
-            (click)="toggleBan(user)">
-            {{ user.is_banned ? 'Unban' : 'Ban' }}
-          </button>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm"
+              [ngClass]="user.is_banned ? 'btn-outline-success' : 'btn-outline-danger'"
+              (click)="toggleBan(user)">
+              <i class="fas" [ngClass]="user.is_banned ? 'fa-check me-1' : 'fa-ban me-1'"></i>
+              {{ user.is_banned ? 'Unban' : 'Ban' }}
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>

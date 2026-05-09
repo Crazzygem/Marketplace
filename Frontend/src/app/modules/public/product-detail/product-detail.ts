@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ListingService } from '../../../core/services/listing';
 import { ChatService } from '../../../core/services/chat';
 import { AuthService } from '../../../core/services/auth';
 import { SavedItemsService } from '../../../core/services/saved-items.service';
 import { Listing } from '../../../core/models/listing';
-import { environment } from '../../../../environments/environment';
 import { getImageUrl, getAllImageUrls } from '../../../shared/utils/image.utils';
 import { LoggerService } from '../../../core/services/logger.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -15,7 +15,9 @@ import { CategoryIconService } from '../../../core/services/category-icon.servic
   selector: 'app-product-detail',
   templateUrl: './product-detail.html',
   styleUrls: ['./product-detail.css'],
-  standalone: false // Important for NgModule
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -26,6 +28,7 @@ export class ProductDetailComponent implements OnInit {
   private savedItemsService = inject(SavedItemsService);
   private logger = inject(LoggerService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
   categoryIconService = inject(CategoryIconService);
 
   listing: Listing | null = null;
@@ -55,11 +58,13 @@ export class ProductDetailComponent implements OnInit {
           }
         }
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading listing:', error);
         this.loading = false;
-      }
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -71,19 +76,21 @@ export class ProductDetailComponent implements OnInit {
 
     if (this.listing) {
       // Create a chat with the seller
-      this.chatService.createChat({
-        listing_id: this.listing.listing_id,
-        message: 'Hi, I\'m interested in your product.'
-      }).subscribe({
-        next: (response) => {
-          this.logger.info('Chat started successfully', response);
-          // Navigate to the chat page
-          this.router.navigate(['/chat', response.chat_room.room_id]);
-        },
-        error: (error) => {
-          this.logger.error('Error starting chat:', error);
-        }
-      });
+      this.chatService
+        .createChat({
+          listing_id: this.listing.listing_id,
+          message: "Hi, I'm interested in your product.",
+        })
+        .subscribe({
+          next: (response) => {
+            this.logger.info('Chat started successfully', response);
+            // Navigate to the chat page
+            this.router.navigate(['/chat', response.chat_room.room_id]);
+          },
+          error: (error) => {
+            this.logger.error('Error starting chat:', error);
+          },
+        });
     }
   }
 
@@ -98,12 +105,14 @@ export class ProductDetailComponent implements OnInit {
       this.savedItemsService.toggleSaved(this.listing).subscribe({
         next: (response: any) => {
           // Show success message based on the response
-          this.notificationService.success(response.is_saved ? 'Added to saved items!' : 'Removed from saved items!');
+          this.notificationService.success(
+            response.is_saved ? 'Added to saved items!' : 'Removed from saved items!',
+          );
         },
         error: (error) => {
           this.logger.error('Error toggling saved status:', error);
           this.notificationService.error('Failed to update saved status. Please try again.');
-        }
+        },
       });
     }
   }

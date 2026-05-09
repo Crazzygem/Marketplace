@@ -12,7 +12,7 @@ describe('ListingService', () => {
     listing_id: 1,
     title: 'Test Listing',
     description: 'Description',
-    price: 100.50,
+    price: 100.5,
     stock_quantity: 10,
     status: 'Active',
     view_count: 0,
@@ -65,7 +65,7 @@ describe('ListingService', () => {
       service.getListings(params).subscribe();
 
       const req = httpMock.expectOne(
-        `${environment.apiUrl}/listings?category_id=1&search=test&page=1`
+        `${environment.apiUrl}/listings?category_id=1&search=test&page=1`,
       );
       expect(req.request.method).toBe('GET');
     });

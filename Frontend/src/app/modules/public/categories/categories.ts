@@ -1,21 +1,24 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { CategoryService } from '../../../core/services/category';
 import { Category } from '../../../core/models/category';
-import { Router } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
 import { LoggerService } from '../../../core/services/logger.service';
 import { CategoryIconService } from '../../../core/services/category-icon.service';
 
 @Component({
   selector: 'app-categories',
-  imports: [NgFor, NgIf],
   templateUrl: './categories.html',
-  styleUrl: './categories.css',
+  styleUrls: ['./categories.css'],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Categories implements OnInit {
+export class CategoriesComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private router = inject(Router);
   private logger = inject(LoggerService);
+  private cdr = inject(ChangeDetectorRef);
   categoryIconService = inject(CategoryIconService);
 
   categories: Category[] = [];
@@ -30,11 +33,13 @@ export class Categories implements OnInit {
       next: (response: any) => {
         this.categories = response.data || response;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading categories:', error);
         this.loading = false;
-      }
+        this.cdr.markForCheck();
+      },
     });
   }
 

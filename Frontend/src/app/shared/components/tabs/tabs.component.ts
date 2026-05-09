@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface TabItem {
@@ -12,6 +12,7 @@ export interface TabItem {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tabs.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent {
   @Input() tabs: TabItem[] = [];

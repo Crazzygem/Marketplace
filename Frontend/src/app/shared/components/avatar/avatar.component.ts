@@ -1,4 +1,4 @@
-import { Component, Input, computed, signal } from '@angular/core';
+import { Component, Input, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
@@ -8,6 +8,7 @@ export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './avatar.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
   @Input() imageSrc: string | null = null;

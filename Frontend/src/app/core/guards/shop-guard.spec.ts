@@ -11,7 +11,7 @@ describe('shopGuard', () => {
   let router: Router;
 
   const createMockRoute = (urlSegments: string[]): any => ({
-    url: urlSegments.map(s => ({ path: s } as UrlSegment)),
+    url: urlSegments.map((s) => ({ path: s }) as UrlSegment),
   });
 
   const mockState = { url: '/shop/dashboard' } as any;
@@ -43,7 +43,9 @@ describe('shopGuard', () => {
       ownShop: { shop_id: 1, shop_name: 'My Shop' },
     });
 
-    const result = TestBed.runInInjectionContext(() => guard(createMockRoute(['shop', 'dashboard']), mockState));
+    const result = TestBed.runInInjectionContext(() =>
+      guard(createMockRoute(['shop', 'dashboard']), mockState),
+    );
 
     expect(result).toBe(true);
   });
@@ -60,7 +62,9 @@ describe('shopGuard', () => {
       is_shop_owner: false,
     });
 
-    const result = TestBed.runInInjectionContext(() => guard(createMockRoute(['shop', 'dashboard']), mockState));
+    const result = TestBed.runInInjectionContext(() =>
+      guard(createMockRoute(['shop', 'dashboard']), mockState),
+    );
 
     expect(result).toBe(true);
   });
@@ -70,7 +74,9 @@ describe('shopGuard', () => {
     authService.currentUser.set(null);
 
     const navigateSpy = spyOn(router, 'navigate');
-    const result = TestBed.runInInjectionContext(() => guard(createMockRoute(['shop', 'dashboard']), mockState));
+    const result = TestBed.runInInjectionContext(() =>
+      guard(createMockRoute(['shop', 'dashboard']), mockState),
+    );
 
     expect(result).toBe(false);
     expect(navigateSpy).toHaveBeenCalledWith(['/auth/login']);
@@ -88,7 +94,9 @@ describe('shopGuard', () => {
       is_shop_owner: false,
     });
 
-    const result = TestBed.runInInjectionContext(() => guard(createMockRoute(['shop', 'create']), mockState));
+    const result = TestBed.runInInjectionContext(() =>
+      guard(createMockRoute(['shop', 'create']), mockState),
+    );
 
     expect(result).toBe(true);
   });
@@ -106,7 +114,9 @@ describe('shopGuard', () => {
     });
 
     const navigateSpy = spyOn(router, 'navigate');
-    const result = TestBed.runInInjectionContext(() => guard(createMockRoute(['shop', 'dashboard']), mockState));
+    const result = TestBed.runInInjectionContext(() =>
+      guard(createMockRoute(['shop', 'dashboard']), mockState),
+    );
 
     expect(result).toBe(false);
     expect(navigateSpy).toHaveBeenCalledWith(['/shop/create']);

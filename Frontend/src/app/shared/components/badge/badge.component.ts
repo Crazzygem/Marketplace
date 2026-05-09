@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type BadgeVariant = 'default' | 'secondary' | 'success' | 'warning' | 'destructive' | 'info';
@@ -8,6 +8,7 @@ export type BadgeVariant = 'default' | 'secondary' | 'success' | 'warning' | 'de
   standalone: true,
   imports: [CommonModule],
   templateUrl: './badge.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BadgeComponent {
   @Input() text: string = '';

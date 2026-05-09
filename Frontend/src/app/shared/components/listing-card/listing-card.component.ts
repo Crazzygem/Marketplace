@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Listing } from '../../../core/models/listing';
 import { getImageUrl } from '../../utils/image.utils';
@@ -11,7 +11,8 @@ import { BadgeComponent } from '../badge/badge.component';
   standalone: true,
   imports: [CommonModule, RouterLink, BadgeComponent],
   templateUrl: './listing-card.component.html',
-  styleUrls: ['./listing-card.component.css']
+  styleUrls: ['./listing-card.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListingCardComponent {
   @Input({ required: true }) listing!: Listing;
@@ -26,7 +27,10 @@ export class ListingCardComponent {
 
   getImageUrl = getImageUrl;
 
-  getStatusVariant(status: string, isSold?: boolean): 'success' | 'destructive' | 'warning' | 'info' {
+  getStatusVariant(
+    status: string,
+    isSold?: boolean,
+  ): 'success' | 'destructive' | 'warning' | 'info' {
     if (isSold) return 'destructive';
     if (status === 'Active') return 'success';
     return 'warning';

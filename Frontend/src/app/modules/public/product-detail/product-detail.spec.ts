@@ -13,11 +13,7 @@ describe('ProductDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        FormsModule
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule],
       declarations: [ProductDetailComponent],
       providers: [
         {
@@ -25,14 +21,13 @@ describe('ProductDetailComponent', () => {
           useValue: {
             snapshot: {
               paramMap: {
-                get: () => '1'
-              }
-            }
-          }
-        }
-      ]
-    })
-    .compileComponents();
+                get: () => '1',
+              },
+            },
+          },
+        },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProductDetailComponent);
     component = fixture.componentInstance;

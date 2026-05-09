@@ -146,7 +146,7 @@ describe('ShopService', () => {
 
   describe('addStaff', () => {
     it('should add staff member', () => {
-      const memberData = { user_id: 2, role: 'manager' as const };
+      const memberData = { email: 'newstaff@example.com' };
 
       service.addStaff(memberData).subscribe((response) => {
         expect(response).toBeTruthy();

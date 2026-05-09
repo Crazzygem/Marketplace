@@ -47,15 +47,14 @@ export interface MutationResponse<T> {
 
 // Dashboard stats response
 export interface DashboardStats {
-  total_users: number;
-  total_shops: number;
-  total_listings: number;
-  total_orders: number;
-  pending_reports: number;
-  recent_signups: number;
-  charts?: {
-    user_growth?: Array<{ date: string; count: number }>;
-    category_dist?: Array<{ category_name: string; total: number }>;
+  totalUsers: number;
+  totalShops: number;
+  totalRevenue: number;
+  recentUsers: Array<{ date: string; count: number }>;
+  shopsByCategory: Array<{ category_name: string; total: number }>;
+  revenueByMonth: any[];
+  stats?: {
+    pending_shops?: number;
   };
 }
 

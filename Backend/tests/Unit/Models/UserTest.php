@@ -82,7 +82,13 @@ class UserTest extends TestCase
     {
         $user = User::factory()->shopOwner()->create();
         
+        // Create a Shop record owned by this user
+        $shop = \App\Models\Shop::factory()->create([
+            'owner_id' => $user->id,
+        ]);
+        
         $this->assertInstanceOf(\App\Models\Shop::class, $user->ownShop);
+        $this->assertEquals($shop->shop_id, $user->ownShop->shop_id);
     }
 
     public function test_user_has_shop_memberships_relationship(): void

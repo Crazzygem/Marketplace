@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -29,6 +29,7 @@ import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.
   ],
   templateUrl: './product-management.component.html',
   styleUrls: ['./product-management.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductManagementComponent implements OnInit {
   private http = inject(HttpClient);
@@ -40,6 +41,7 @@ export class ProductManagementComponent implements OnInit {
   categoryIconService = inject(CategoryIconService);
   private authService = inject(AuthService);
   private logger = inject(LoggerService);
+  private cdr = inject(ChangeDetectorRef);
 
   private apiUrl = environment.apiUrl;
 
@@ -93,10 +95,12 @@ export class ProductManagementComponent implements OnInit {
           this.userShop = response.shop_details;
           this.productData.shop_id = response.shop_details.shop_id;
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         // User doesn't have a shop, that's fine
         this.logger.info('User does not have a shop');
+        this.cdr.markForCheck();
       },
     });
   }
@@ -105,10 +109,12 @@ export class ProductManagementComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (response: any) => {
         this.categories = response.data || response;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading categories:', error);
         this.errorMessage = 'Failed to load categories';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -139,11 +145,13 @@ export class ProductManagementComponent implements OnInit {
             return `${this.apiUrl.replace('/api', '')}${imagePath}`;
           });
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading listing details:', error);
         this.errorMessage = 'Failed to load listing details';
         this.router.navigate(['/shop/settings'], { queryParams: { tab: 'listings' } });
+        this.cdr.markForCheck();
       },
     });
   }
@@ -270,6 +278,7 @@ export class ProductManagementComponent implements OnInit {
           // Navigate back to Settings → Listings tab after successful update
           this.router.navigate(['/shop/settings'], { queryParams: { tab: 'listings' } });
           this.loading = false;
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error updating product:', error);
@@ -291,6 +300,7 @@ export class ProductManagementComponent implements OnInit {
 
           this.errorMessage = errorMsg;
           this.loading = false;
+          this.cdr.markForCheck();
         },
       });
     } else {
@@ -307,6 +317,7 @@ export class ProductManagementComponent implements OnInit {
           // this.router.navigate(['/shop/products']);
           this.resetForm();
           this.loading = false;
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error adding product:', error);
@@ -328,6 +339,7 @@ export class ProductManagementComponent implements OnInit {
 
           this.errorMessage = errorMsg;
           this.loading = false;
+          this.cdr.markForCheck();
         },
       });
     }
@@ -377,10 +389,12 @@ export class ProductManagementComponent implements OnInit {
 
           // Navigate back to Settings → Listings tab after deletion
           this.router.navigate(['/shop/settings'], { queryParams: { tab: 'listings' } });
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error deleting product:', error);
           this.errorMessage = 'Failed to delete product';
+          this.cdr.markForCheck();
         },
       });
     }

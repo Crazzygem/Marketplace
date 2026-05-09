@@ -5,16 +5,21 @@ import { RouterModule } from '@angular/router';
 import { PublicRoutingModule } from './public-routing-module';
 import { HomeComponent } from './home/home';
 import { ProductDetailComponent } from './product-detail/product-detail';
+import { CategoriesComponent } from './categories/categories';
+import { SavedItemsComponent } from './saved-items/saved-items.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 @NgModule({
-  declarations: [
-    ProductDetailComponent
-  ],
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
-    PublicRoutingModule
-  ]
+    PublicRoutingModule,
+    HomeComponent,
+    ProductDetailComponent,
+    CategoriesComponent,
+    SavedItemsComponent,
+    CheckoutComponent,
+  ],
 })
-export class PublicModule { }
+export class PublicModule {}

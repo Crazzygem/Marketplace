@@ -48,7 +48,7 @@ export interface SendMessageResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChatService {
   private http = inject(HttpClient);

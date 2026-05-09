@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { OrderService } from '../../core/services/order';
 import { AuthService } from '../../core/services/auth';
@@ -17,9 +17,18 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, AvatarComponent, BadgeComponent, TabsComponent, AlertComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    AvatarComponent,
+    BadgeComponent,
+    TabsComponent,
+    AlertComponent,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserProfileComponent implements OnInit {
   private orderService = inject(OrderService);
@@ -27,6 +36,7 @@ export class UserProfileComponent implements OnInit {
   public authService = inject(AuthService);
   private logger = inject(LoggerService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
 
   currentUser: any = null;
   orders: Order[] = [];
@@ -89,10 +99,12 @@ export class UserProfileComponent implements OnInit {
         this.orders = Array.isArray(response) ? response : response.data || [];
         this.pagination.totalPages = Math.ceil(this.orders.length / this.pagination.itemsPerPage);
         this.loading.orders = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading orders:', error);
         this.loading.orders = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -153,7 +165,10 @@ export class UserProfileComponent implements OnInit {
       title: 'Success',
       description: 'Name updated successfully',
     };
-    setTimeout(() => (this.nameAlert.show = false), 5000);
+    setTimeout(() => {
+      this.nameAlert.show = false;
+      this.cdr.markForCheck();
+    }, 5000);
   }
 
   // Password change
@@ -210,7 +225,11 @@ export class UserProfileComponent implements OnInit {
         title: 'Success',
         description: 'Password changed successfully',
       };
-      setTimeout(() => (this.passwordAlert.show = false), 5000);
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.passwordAlert.show = false;
+        this.cdr.markForCheck();
+      }, 5000);
     }, 1000);
   }
 

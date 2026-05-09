@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AdminService } from '../../../core/services/admin';
 import { AuthService } from '../../../core/services/auth';
 import { Router } from '@angular/router';
@@ -13,12 +13,14 @@ import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.
   templateUrl: './admin-dashboard.html',
   styleUrls: ['./admin-dashboard.css'],
   standalone: false, // Important for NgModule
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent implements OnInit {
   private adminService = inject(AdminService);
   private authService = inject(AuthService);
   private router = inject(Router);
   private logger = inject(LoggerService);
+  private cdr = inject(ChangeDetectorRef);
 
   dashboardStats: any = null;
   loading = true;
@@ -75,21 +77,25 @@ export class AdminDashboardComponent implements OnInit {
         this.loading = false;
 
         // Prepare chart data
-        if (data.charts?.user_growth) {
-          const userGrowth = data.charts.user_growth;
+        if (data.recentUsers && data.recentUsers.length > 0) {
+          // Reverse so chart shows oldest → newest (backend orders desc)
+          const userGrowth = [...data.recentUsers].reverse();
           this.lineChartData.labels = userGrowth.map((item: any) => item.date);
           this.lineChartData.datasets[0].data = userGrowth.map((item: any) => item.count);
         }
 
-        if (data.charts?.category_dist) {
-          const categoryDist = data.charts.category_dist;
+        if (data.shopsByCategory && data.shopsByCategory.length > 0) {
+          const categoryDist = data.shopsByCategory;
           this.pieChartData.labels = categoryDist.map((item: any) => item.category_name);
           this.pieChartData.datasets[0].data = categoryDist.map((item: any) => item.total);
         }
+
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading dashboard stats:', error);
         this.loading = false;
+        this.cdr.markForCheck();
       },
     });
   }

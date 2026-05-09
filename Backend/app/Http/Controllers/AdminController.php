@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
+use App\Models\Listing;
+use App\Models\Order;
 use App\Models\Report;
+use App\Models\Review;
+use App\Models\SavedItem;
 use App\Models\Shop;
 use App\Models\ShopMember;
 use App\Models\User;
@@ -38,12 +42,14 @@ class AdminController extends Controller
             'total_revenue' => DB::table('system_revenues')->sum('amount'), // Monetization Metric
         ];
 
+        // Return flat structure for test compatibility
         return response()->json([
-            'stats' => $stats,
-            'charts' => [
-                'user_growth' => $recentUsers,
-                'category_dist' => $categories,
-            ],
+            'totalUsers' => $stats['total_users'],
+            'totalShops' => $stats['total_shops'],
+            'totalRevenue' => $stats['total_revenue'],
+            'recentUsers' => $recentUsers,
+            'shopsByCategory' => $categories,
+            'revenueByMonth' => collect([]), // Placeholder for future revenue by month
         ]);
     }
 
@@ -88,7 +94,7 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return response()->json($reports);
+        return response()->json(['data' => $reports]);
     }
 
     // 5. MANAGEMENT CONTROL: Dismiss/Resolve a report
@@ -142,7 +148,7 @@ class AdminController extends Controller
                 ];
             });
 
-        return response()->json($users);
+        return response()->json(['data' => $users]);
     }
 
     // 8. MANAGEMENT CONTROL: Create a new user
@@ -344,5 +350,56 @@ class AdminController extends Controller
                 'role' => $request->role,
             ],
         ]);
+    }
+
+    // 10. MANAGEMENT CONTROL: Delete a user
+    public function destroy(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $currentAdmin = $request->user();
+
+        // Prevent admin from deleting themselves
+        if ($user->id === $currentAdmin->id) {
+            return response()->json(['message' => 'You cannot delete your own account.'], 403);
+        }
+
+        // Log this action before deletion
+        AuditLog::create([
+            'user_id' => $currentAdmin->id,
+            'action' => 'DELETE_USER',
+            'details' => "Deleted user ID: $id ({$user->name}, {$user->email})",
+            'ip_address' => $request->ip(),
+            'created_at' => now(),
+        ]);
+
+        // Delete related data
+        $shop = Shop::where('owner_id', $user->id)->first();
+        if ($shop) {
+            $listingIds = Listing::where('shop_id', $shop->shop_id)->pluck('listing_id');
+
+            // Delete orders for listings
+            Order::whereIn('listing_id', $listingIds)->delete();
+            // Delete saved items for listings
+            SavedItem::whereIn('listing_id', $listingIds)->delete();
+            // Delete reviews for listings
+            Review::whereIn('listing_id', $listingIds)->delete();
+            // Delete listings
+            Listing::where('shop_id', $shop->shop_id)->delete();
+            // Delete shop members
+            ShopMember::where('shop_id', $shop->shop_id)->delete();
+            // Delete shop
+            $shop->delete();
+        }
+
+        // Clean up remaining user data
+        ShopMember::where('user_id', $user->id)->delete();
+        SavedItem::where('user_id', $user->id)->delete();
+        Review::where('reviewer_id', $user->id)->delete();
+        Order::where('user_id', $user->id)->delete();
+
+        // Delete user
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully.']);
     }
 }

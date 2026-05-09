@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService, User, AuthResponse } from './auth';
 
@@ -133,10 +130,10 @@ describe('AuthService', () => {
   describe('computed values', () => {
     it('should compute isAuthenticated correctly', () => {
       expect(service.isAuthenticated()).toBe(false);
-      
+
       service.token.set('test-token');
       expect(service.isAuthenticated()).toBe(true);
-      
+
       service.token.set(null);
       expect(service.isAuthenticated()).toBe(false);
     });

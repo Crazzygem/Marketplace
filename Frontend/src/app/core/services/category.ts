@@ -23,7 +23,7 @@ export interface CreateCategoryRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
   private http = inject(HttpClient);

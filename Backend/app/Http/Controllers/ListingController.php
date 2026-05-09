@@ -73,13 +73,13 @@ class ListingController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
+            'stock_quantity' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,category_id',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10240', // 10MB max per image
             'existing_images' => 'nullable|array',
             'existing_images.*' => 'string',
-            'status' => 'in:Draft,Active,Sold Out,Inactive',
+            'status' => 'nullable|in:Draft,Active,Sold Out,Inactive',
         ]);
 
         $userId = Auth::id();
@@ -231,12 +231,12 @@ class ListingController extends Controller
             'title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
             'price' => 'sometimes|numeric|min:0',
-            'stock_quantity' => 'sometimes|integer|min:0',
-            'category_id' => 'sometimes|exists:categories,category_id',
+            'stock_quantity' => 'sometimes|nullable|numeric|min:0',
+            'category_id' => 'sometimes|nullable|exists:categories,category_id',
             'existing_images' => 'nullable|array',
             'existing_images.*' => 'string',
             'replace_images' => 'sometimes|in:true,false',
-            'status' => 'sometimes|in:Draft,Active,Sold Out,Inactive',
+            'status' => 'sometimes|nullable|in:Draft,Active,Sold Out,Inactive',
         ]);
 
         if ($validator->fails()) {

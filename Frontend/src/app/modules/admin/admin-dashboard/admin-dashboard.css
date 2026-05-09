@@ -1,13 +1,102 @@
 /* Admin Dashboard Styles */
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--muted, #f8f9fa);
+}
+
+.dashboard-title {
+  color: var(--foreground, #09090b);
+  font-weight: 700;
+  font-size: 1.75rem;
+}
+
+/* Stat Cards */
+.stat-card {
+  border: none;
+  border-radius: var(--radius-lg, 0.75rem);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1)) !important;
+}
+
+.stat-card .card-body {
+  padding: 1.5rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  color: var(--foreground, #09090b);
+}
+
+.stat-icon {
+  color: var(--muted-foreground, #71717a);
+  opacity: 0.3;
+}
+
+/* Stat Card Color Variants */
+.stat-card-primary {
+  border-left: 4px solid var(--primary, #0f172a);
+}
+
+.stat-card-primary .stat-icon {
+  color: var(--primary, #0f172a);
+}
+
+.stat-card-success {
+  border-left: 4px solid var(--success, #22c55e);
+}
+
+.stat-card-success .stat-icon {
+  color: var(--success, #22c55e);
+}
+
+.stat-card-info {
+  border-left: 4px solid var(--info, #3b82f6);
+}
+
+.stat-card-info .stat-icon {
+  color: var(--info, #3b82f6);
+}
+
+.stat-card-warning {
+  border-left: 4px solid var(--warning, #f59e0b);
+}
+
+.stat-card-warning .stat-icon {
+  color: var(--warning, #f59e0b);
+}
+
+/* Chart Containers */
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+}
+
+/* Animation for loading states */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card,
 .card {
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
+  animation: fadeIn 0.3s ease-out;
 }
-
-.card-header {
-  background-color: var(--muted);
-  border-bottom: 1px solid var(--border);
-}
-
-/* Note: .bg-primary, .bg-success, .bg-warning, .bg-info are now 
-   handled by tokens.css with shadcn design tokens */

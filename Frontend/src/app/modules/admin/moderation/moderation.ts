@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService, ReportDTO, UserDTO } from '../../../core/services/admin';
 import { LoggerService } from '../../../core/services/logger.service';
@@ -18,10 +18,12 @@ interface AlertState {
   styleUrls: ['./moderation.css'],
   standalone: true,
   imports: [CommonModule, BadgeComponent, AlertComponent, SkeletonComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModerationComponent implements OnInit {
   private adminService = inject(AdminService);
   private logger = inject(LoggerService);
+  private cdr = inject(ChangeDetectorRef);
   reports: ReportDTO[] = [];
   isLoading = signal<boolean>(true);
   alert = signal<AlertState | null>(null);
@@ -37,17 +39,19 @@ export class ModerationComponent implements OnInit {
     this.adminService.getReports().subscribe({
       next: (data: any) => {
         // Handle both paginated and non-paginated responses
-        this.reports = Array.isArray(data) ? data : (data.data || []);
+        this.reports = Array.isArray(data) ? data : data.data || [];
         this.isLoading.set(false);
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading reports:', error);
         this.showAlert(
           'Error Loading Reports',
           'Failed to load moderation queue. Please try again.',
-          'danger'
+          'danger',
         );
         this.isLoading.set(false);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -59,8 +63,9 @@ export class ModerationComponent implements OnInit {
       this.showAlert(
         'Report Resolved',
         `Report #${report.id} has been marked as resolved.`,
-        'success'
+        'success',
       );
+      this.cdr.markForCheck();
     });
   }
 
@@ -73,7 +78,7 @@ export class ModerationComponent implements OnInit {
   showAlert(
     title: string,
     description: string,
-    variant: 'success' | 'danger' | 'warning' | 'info'
+    variant: 'success' | 'danger' | 'warning' | 'info',
   ) {
     this.alert.set({ title, description, variant });
 

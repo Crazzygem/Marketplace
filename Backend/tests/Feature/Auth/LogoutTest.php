@@ -32,6 +32,15 @@ class LogoutTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ])->postJson('/api/logout');
 
+        // Verify token was deleted from database
+        $this->assertDatabaseMissing('personal_access_tokens', [
+            'tokenable_id' => $user->id,
+        ]);
+
+        // After logout, the token should be deleted, so using it should fail
+        // We need to make a fresh request without cached authentication
+        $this->refreshApplication();
+        
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->getJson('/api/user');

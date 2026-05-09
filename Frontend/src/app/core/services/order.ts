@@ -52,7 +52,7 @@ export interface OrderQueryParams {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderService {
   private http = inject(HttpClient);
@@ -60,16 +60,16 @@ export class OrderService {
 
   getOrders(params?: OrderQueryParams): Observable<PaginatedResponse<Order> | Order[]> {
     let httpParams = new HttpParams();
-    
+
     if (params) {
-      Object.keys(params).forEach(key => {
+      Object.keys(params).forEach((key) => {
         const value = params[key as keyof OrderQueryParams];
         if (value !== undefined && value !== null) {
           httpParams = httpParams.set(key, value.toString());
         }
       });
     }
-    
+
     return this.http.get<PaginatedResponse<Order> | Order[]>(this.apiUrl, { params: httpParams });
   }
 

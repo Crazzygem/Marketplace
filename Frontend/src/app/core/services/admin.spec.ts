@@ -9,7 +9,7 @@ describe('AdminService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AdminService]
+      providers: [AdminService],
     });
     service = TestBed.inject(AdminService);
   });

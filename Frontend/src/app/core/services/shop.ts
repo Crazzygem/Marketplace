@@ -47,7 +47,7 @@ export interface AddStaffRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShopService {
   private http = inject(HttpClient);
@@ -77,6 +77,10 @@ export class ShopService {
 
   getShopStats(): Observable<ShopStats> {
     return this.http.get<ShopStats>(`${this.myShopUrl}/stats`);
+  }
+
+  updateMyShop(shop: Partial<Shop>): Observable<MutationResponse<Shop>> {
+    return this.http.put<MutationResponse<Shop>>(`${this.myShopUrl}`, shop);
   }
 
   getStaff(): Observable<StaffMember[]> {

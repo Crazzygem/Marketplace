@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ShopService } from '../../../core/services/shop';
 import { AuthService } from '../../../core/services/auth';
@@ -11,6 +11,7 @@ import { CategoryIconService } from '../../../core/services/category-icon.servic
   standalone: false, // Important for NgModule
   templateUrl: './shop-create.component.html',
   styleUrls: ['./shop-create.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShopCreateComponent implements OnInit {
   private shopService = inject(ShopService);
@@ -18,6 +19,7 @@ export class ShopCreateComponent implements OnInit {
   private router = inject(Router);
   private logger = inject(LoggerService);
   private categoryIconService = inject(CategoryIconService);
+  private cdr = inject(ChangeDetectorRef);
 
   shopData = {
     shop_name: '',
@@ -61,6 +63,7 @@ export class ShopCreateComponent implements OnInit {
         this.logger.info('Shop created successfully', response);
         this.successMessage = 'Shop created successfully! Redirecting to your shop dashboard...';
         this.loading = false;
+        this.cdr.markForCheck();
         // Redirect to the new shop dashboard after a short delay
         setTimeout(() => {
           this.router.navigate(['/shop']);
@@ -70,6 +73,7 @@ export class ShopCreateComponent implements OnInit {
         this.logger.error('Error creating shop:', error);
         this.errorMessage = error.error?.message || 'Failed to create shop. Please try again.';
         this.loading = false;
+        this.cdr.markForCheck();
       },
     });
   }

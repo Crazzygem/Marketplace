@@ -43,7 +43,7 @@ export interface ReviewQueryParams {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReviewService {
   private http = inject(HttpClient);
@@ -51,16 +51,16 @@ export class ReviewService {
 
   getReviews(params?: ReviewQueryParams): Observable<PaginatedResponse<Review> | Review[]> {
     let httpParams = new HttpParams();
-    
+
     if (params) {
-      Object.keys(params).forEach(key => {
+      Object.keys(params).forEach((key) => {
         const value = params[key as keyof ReviewQueryParams];
         if (value !== undefined && value !== null) {
           httpParams = httpParams.set(key, value.toString());
         }
       });
     }
-    
+
     return this.http.get<PaginatedResponse<Review> | Review[]>(this.apiUrl, { params: httpParams });
   }
 
@@ -72,7 +72,10 @@ export class ReviewService {
     return this.http.post<MutationResponse<Review>>(this.apiUrl, review);
   }
 
-  updateReview(id: number, review: Partial<CreateReviewRequest>): Observable<MutationResponse<Review>> {
+  updateReview(
+    id: number,
+    review: Partial<CreateReviewRequest>,
+  ): Observable<MutationResponse<Review>> {
     return this.http.put<MutationResponse<Review>>(`${this.apiUrl}/${id}`, review);
   }
 

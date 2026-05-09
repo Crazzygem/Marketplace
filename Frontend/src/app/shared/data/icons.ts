@@ -220,17 +220,17 @@ export const CATEGORY_ICONS: IconItem[] = [
 
 export const getIconsByCategory = (): Record<string, IconItem[]> => {
   const grouped: Record<string, IconItem[]> = {};
-  
-  CATEGORY_ICONS.forEach(icon => {
+
+  CATEGORY_ICONS.forEach((icon) => {
     if (!grouped[icon.category]) {
       grouped[icon.category] = [];
     }
     grouped[icon.category].push(icon);
   });
-  
+
   return grouped;
 };
 
 export const getIconByName = (iconName: string): IconItem | undefined => {
-  return CATEGORY_ICONS.find(icon => icon.icon === iconName);
+  return CATEGORY_ICONS.find((icon) => icon.icon === iconName);
 };

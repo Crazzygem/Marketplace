@@ -38,7 +38,7 @@ export interface RegisterData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -57,15 +57,15 @@ export class AuthService {
   isCustomer = computed(() => this.currentUser()?.is_customer || false);
 
   login(credentials: LoginCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(res => this.setSession(res))
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(tap((res) => this.setSession(res)));
   }
 
   register(data: RegisterData): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
-      tap(res => this.setSession(res))
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/register`, data)
+      .pipe(tap((res) => this.setSession(res)));
   }
 
   logout(): void {

@@ -16,7 +16,7 @@ describe('adminGuard', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
     });
-    
+
     guard = adminGuard;
     authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);

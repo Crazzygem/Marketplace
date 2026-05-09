@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navigation/navbar.component';
 import { SidebarComponent } from './shared/components/navigation/sidebar.component';
@@ -9,7 +9,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, SidebarComponent, ToastComponent],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-}
+export class AppComponent {}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -12,7 +12,6 @@ import { TabItem } from '../../../shared/components/tabs/tabs.component';
 import { TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { IconPickerComponent } from '../../../shared/components/icon-picker/icon-picker.component';
 import { BadgeComponent } from '../../../shared/components/badge/badge.component';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import type { BadgeVariant } from '../../../shared/components/badge/badge.component';
 import type { AlertVariant } from '../../../shared/components/alert/alert.component';
@@ -30,10 +29,10 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     TabsComponent,
     IconPickerComponent,
     BadgeComponent,
-    AlertComponent,
     SkeletonComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
   private adminService = inject(AdminService);
@@ -42,6 +41,7 @@ export class SettingsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private logger = inject(LoggerService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
 
   activeTab = 'categories';
 
@@ -116,9 +116,11 @@ export class SettingsComponent implements OnInit {
       next: (data: any) => {
         this.categories = Array.isArray(data) ? data : data.data || [];
         this.categoriesLoaded = true;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading categories:', error);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -161,27 +163,33 @@ export class SettingsComponent implements OnInit {
     }
 
     if (this.editingCategory) {
-      this.categoryService.updateCategory(this.editingCategory.category_id, this.categoryForm).subscribe({
-        next: () => {
-          this.notificationService.success('Category updated successfully');
-          this.loadCategories();
-          this.closeCategoryModal();
-        },
-        error: (error) => {
-          this.logger.error('Error updating category:', error);
-          this.notificationService.error('Failed to update category');
-        },
-      });
+      this.categoryService
+        .updateCategory(this.editingCategory.category_id, this.categoryForm)
+        .subscribe({
+          next: () => {
+            this.notificationService.success('Category updated successfully');
+            this.loadCategories();
+            this.closeCategoryModal();
+            this.cdr.markForCheck();
+          },
+          error: (error) => {
+            this.logger.error('Error updating category:', error);
+            this.notificationService.error('Failed to update category');
+            this.cdr.markForCheck();
+          },
+        });
     } else {
       this.categoryService.createCategory(this.categoryForm).subscribe({
         next: () => {
           this.notificationService.success('Category created successfully');
           this.loadCategories();
           this.closeCategoryModal();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error creating category:', error);
           this.notificationService.error('Failed to create category');
+          this.cdr.markForCheck();
         },
       });
     }
@@ -194,12 +202,14 @@ export class SettingsComponent implements OnInit {
         this.notificationService.success(
           category.is_popular
             ? `${category.category_name} is now popular`
-            : `${category.category_name} is no longer popular`
+            : `${category.category_name} is no longer popular`,
         );
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error toggling popular status:', error);
         this.notificationService.error('Failed to update popular status');
+        this.cdr.markForCheck();
       },
     });
   }
@@ -215,10 +225,12 @@ export class SettingsComponent implements OnInit {
         next: () => {
           this.notificationService.success('Category deleted successfully');
           this.categories = this.categories.filter((c) => c.category_id !== category.category_id);
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error deleting category:', error);
           this.notificationService.error('Failed to delete category');
+          this.cdr.markForCheck();
         },
       });
     }
@@ -232,11 +244,14 @@ export class SettingsComponent implements OnInit {
         this.users = Array.isArray(data) ? data : data.data || [];
         this.usersLoading = false;
         this.usersLoaded = true;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading users:', error);
-        this.usersError = error.error?.message || error.message || 'Failed to load users. Please try again.';
+        this.usersError =
+          error.error?.message || error.message || 'Failed to load users. Please try again.';
         this.usersLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -296,12 +311,14 @@ export class SettingsComponent implements OnInit {
         this.loadUsers();
         this.closeUserModal();
         this.userFormLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error creating user:', error);
         const message = error.error?.message || 'Failed to create user';
         this.notificationService.error(message);
         this.userFormLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -323,13 +340,17 @@ export class SettingsComponent implements OnInit {
 
       this.adminService.updateUserRole(user.id, payload).subscribe({
         next: () => {
-          this.notificationService.success(`${user.name} is now a shop owner with shop "${user.name}"`);
+          this.notificationService.success(
+            `${user.name} is now a shop owner with shop "${user.name}"`,
+          );
           this.loadUsers();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error updating user role:', error);
           const message = error.error?.message || 'Failed to update user role';
           this.notificationService.error(message);
+          this.cdr.markForCheck();
         },
       });
     } else if (currentRole === 'shop_owner' && newRole === 'customer') {
@@ -339,6 +360,7 @@ export class SettingsComponent implements OnInit {
           // User had no shop, just update role
           this.notificationService.success(`${user.name}'s role updated successfully`);
           this.loadUsers();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error updating user role:', error);
@@ -351,9 +373,11 @@ export class SettingsComponent implements OnInit {
             this.demotingUserShopName = shop.shop_name;
             this.demotingUserListingCount = shop.listing_count;
             this.pendingRoleChange = newRole;
+            this.cdr.markForCheck();
           } else {
             const message = error.error?.message || 'Failed to update user role';
             this.notificationService.error(message);
+            this.cdr.markForCheck();
           }
         },
       });
@@ -363,11 +387,13 @@ export class SettingsComponent implements OnInit {
         next: () => {
           this.notificationService.success(`${user.name}'s role updated successfully`);
           this.loadUsers();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error updating user role:', error);
           const message = error.error?.message || 'Failed to update user role';
           this.notificationService.error(message);
+          this.cdr.markForCheck();
         },
       });
     }
@@ -384,14 +410,18 @@ export class SettingsComponent implements OnInit {
 
     this.adminService.updateUserRole(user.id, payload).subscribe({
       next: () => {
-        this.notificationService.success(`${user.name} demoted to customer. Shop and listings deleted.`);
+        this.notificationService.success(
+          `${user.name} demoted to customer. Shop and listings deleted.`,
+        );
         this.closeDemoteModal();
         this.loadUsers();
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error updating user role:', error);
         const message = error.error?.message || 'Failed to update user role';
         this.notificationService.error(message);
+        this.cdr.markForCheck();
       },
     });
   }
@@ -416,10 +446,12 @@ export class SettingsComponent implements OnInit {
           next: () => {
             user.is_banned = true;
             this.notificationService.success(`${user.name} has been banned`);
+            this.cdr.markForCheck();
           },
           error: (error) => {
             this.logger.error('Error banning user:', error);
             this.notificationService.error('Failed to ban user');
+            this.cdr.markForCheck();
           },
         });
       } else {
@@ -427,13 +459,36 @@ export class SettingsComponent implements OnInit {
           next: () => {
             user.is_banned = false;
             this.notificationService.success(`${user.name} has been unbanned`);
+            this.cdr.markForCheck();
           },
           error: (error) => {
             this.logger.error('Error unbanning user:', error);
             this.notificationService.error('Failed to unban user');
+            this.cdr.markForCheck();
           },
         });
       }
+    }
+  }
+
+  deleteUser(user: UserDTO): void {
+    if (
+      confirm(
+        `Are you sure you want to permanently delete ${user.name} (${user.email})? This action cannot be undone.`,
+      )
+    ) {
+      this.adminService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.users = this.users.filter((u) => u.id !== user.id);
+          this.notificationService.success(`${user.name} has been deleted permanently.`);
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.logger.error('Error deleting user:', error);
+          this.notificationService.error(error.error?.message || 'Failed to delete user.');
+          this.cdr.markForCheck();
+        },
+      });
     }
   }
 
@@ -444,10 +499,12 @@ export class SettingsComponent implements OnInit {
         this.reports = Array.isArray(data) ? data : data.data || [];
         this.reportsLoading = false;
         this.reportsLoaded = true;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading reports:', error);
         this.reportsLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -458,10 +515,12 @@ export class SettingsComponent implements OnInit {
         report.status = 'resolved';
         report.is_resolved = true;
         this.notificationService.success(`Report #${report.report_id} resolved`);
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error resolving report:', error);
         this.notificationService.error('Failed to resolve report');
+        this.cdr.markForCheck();
       },
     });
   }

@@ -4,45 +4,50 @@
 <!-- Main layout with navigation -->
 <app-navbar />
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <div class="col-md-3 col-lg-2 px-0">
-      <app-sidebar />
-    </div>
+<!-- Sidebar (position: fixed, independent of content flow) -->
+<app-sidebar />
 
-    <!-- Main content area -->
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+<!-- Main content area -->
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <main class="main-content px-md-4">
       <router-outlet />
     </main>
   </div>
 </div>
 
 <!-- Footer -->
-<footer class="footer bg-light mt-5">
-  <div class="container py-4">
+<footer class="footer bg-light">
+  <div class="container-fluid py-4">
     <div class="row">
-      <div class="col-md-4">
-        <h5>Marketplace</h5>
-        <p></p>
-      </div>
-      <div class="col-md-4">
-        <h5>Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a routerLink="/public/home">Home</a></li>
-          <li><a routerLink="/auth/login">Login</a></li>
-          <li><a routerLink="/auth/register">Register</a></li>
+      <div class="col-md-6 mb-3 mb-md-0">
+        <h6 class="fw-bold text-uppercase text-muted small mb-3">Quick Links</h6>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2">
+            <a class="text-reset text-decoration-none" routerLink="/public/about">
+              <i class="fas fa-info-circle me-2"></i>About
+            </a>
+          </li>
+          <li>
+            <a class="text-reset text-decoration-none" routerLink="/public/contact">
+              <i class="fas fa-envelope me-2"></i>Contact
+            </a>
+          </li>
         </ul>
       </div>
-      <div class="col-md-4">
-        <h5>Contact</h5>
-        <p>Email: seth@gmail.com</p>
-        <p>Phone: +855 12 345 678</p>
+      <div class="col-md-6">
+        <h6 class="fw-bold text-uppercase text-muted small mb-3">Contact</h6>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2">
+            <i class="fas fa-envelope me-2"></i>seth@gmail.com
+          </li>
+          <li>
+            <i class="fas fa-phone me-2"></i>+855 12 345 678
+          </li>
+        </ul>
       </div>
     </div>
-    <hr>
-    <div class="text-center">
-      <p>&copy; 2026 Marketplace. All rights reserved.</p>
-    </div>
+    <hr class="my-4">
+    <p class="text-center text-muted mb-0 small">&copy; 2026 Marketplace. All rights reserved.</p>
   </div>
 </footer>

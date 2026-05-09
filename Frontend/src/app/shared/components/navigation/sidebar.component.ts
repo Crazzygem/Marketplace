@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../../core/services/auth';
@@ -8,9 +8,11 @@ import { AuthService } from '../../../core/services/auth';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgIf],
   template: `
-    <div class="sidebar d-flex flex-column p-3 bg-light vh-100" style="width: 250px;">
+    <div class="sidebar d-flex flex-column p-3 bg-light" style="width: 250px;">
       <div class="mb-4">
-        <h5 class="fw-bold">Marketplace</h5>
+        <a class="text-decoration-none text-dark" routerLink="/public/home">
+          <h5 class="fw-bold mb-0">Marketplace</h5>
+        </a>
       </div>
 
       <ul class="nav flex-column mb-4">
@@ -133,6 +135,7 @@ import { AuthService } from '../../../core/services/auth';
   host: {
     class: 'd-none d-md-block',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
   authService = inject(AuthService);

@@ -1,0 +1,42 @@
+/* Categories Grid Styling */
+.category-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--border);
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.category-icon {
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  background-color: var(--muted);
+  border-radius: var(--radius-md);
+}
+
+.category-card .card-title {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.category-card .card-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .category-icon {
+    height: 60px;
+  }
+  
+  .category-icon i {
+    font-size: 1.5rem !important;
+  }
+}

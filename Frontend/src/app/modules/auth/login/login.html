@@ -9,7 +9,18 @@
               <p class="text-muted">Sign in to your account</p>
             </div>
 
-            <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <!-- Error Alert -->
+            @if (errorMessage()) {
+              <app-alert
+                variant="danger"
+                [title]="'Login Error'"
+                [description]="errorMessage()!"
+                [showIcon]="true"
+              >
+              </app-alert>
+            }
+
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
               <div class="mb-4">
                 <label for="email" class="form-label">Email Address</label>
                 <input
@@ -17,9 +28,15 @@
                   name="email"
                   type="email"
                   class="form-control form-control-lg"
+                  [class.is-invalid]="!isEmailValid() && email().length > 0"
+                  [class.is-valid]="isEmailValid() && email().length > 0"
                   id="email"
                   placeholder="Enter your email"
-                  required>
+                  required
+                />
+                @if (!isEmailValid() && email().length > 0) {
+                  <div class="invalid-feedback d-block">Please enter a valid email address</div>
+                }
               </div>
 
               <div class="mb-4">
@@ -31,58 +48,65 @@
                   <input
                     [(ngModel)]="password"
                     name="password"
-                    [type]="showPassword ? 'text' : 'password'"
+                    [type]="showPassword() ? 'text' : 'password'"
                     class="form-control form-control-lg"
+                    [class.is-invalid]="!isPasswordValid() && password().length > 0"
+                    [class.is-valid]="isPasswordValid() && password().length > 0"
                     id="password"
                     placeholder="Enter your password"
-                    required>
+                    required
+                  />
                   <button
                     type="button"
                     class="btn btn-outline-secondary input-group-text"
                     (click)="togglePassword()"
-                    [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
-                    <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                    [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+                  >
+                    <i
+                      class="fas"
+                      [class.fa-eye]="!showPassword()"
+                      [class.fa-eye-slash]="showPassword()"
+                    ></i>
                   </button>
                 </div>
+                @if (!isPasswordValid() && password().length > 0) {
+                  <div class="invalid-feedback d-block">Password must be at least 6 characters</div>
+                }
               </div>
 
               <div class="mb-4">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="rememberMe">
-                  <label class="form-check-label" for="rememberMe">
-                    Remember me
-                  </label>
+                  <input class="form-check-input" type="checkbox" id="rememberMe" />
+                  <label class="form-check-label" for="rememberMe"> Remember me </label>
                 </div>
               </div>
 
               <button
                 type="submit"
                 class="btn btn-primary btn-lg w-100 mb-3"
-                [disabled]="!loginForm.form.valid">
-                Sign In
+                [disabled]="!isFormValid() || isSubmitting()"
+              >
+                @if (isSubmitting()) {
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Signing in...
+                } @else {
+                  Sign In
+                }
               </button>
 
               <div class="text-center">
-                <p class="mb-0">Don't have an account?
+                <p class="mb-0">
+                  Don't have an account?
                   <a routerLink="/auth/register" class="text-decoration-none">Register here</a>
                 </p>
               </div>
             </form>
 
-            <div class="divider mt-4 mb-4">
-              <div class="divider-line"></div>
-              <span class="px-3 text-muted">or continue with</span>
-              <div class="divider-line"></div>
-            </div>
 
-            <div class="d-grid gap-2">
-              <button class="btn btn-outline-google btn-lg">
-                <i class="fab fa-google me-2"></i> Sign in with Google
-              </button>
-              <button class="btn btn-outline-facebook btn-lg">
-                <i class="fab fa-facebook-f me-2"></i> Sign in with Facebook
-              </button>
-            </div>
           </div>
         </div>
       </div>

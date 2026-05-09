@@ -27,13 +27,13 @@ export interface CreateUserRequest {
   name: string;
   email: string;
   password: string;
-  role: 'customer' | 'shop_owner' | 'admin';
+  role: 'customer' | 'shop_owner' | 'admin' | 'staff';
   shop_name?: string;
   shop_description?: string;
 }
 
 export interface UpdateRoleRequest {
-  role: 'customer' | 'shop_owner' | 'admin';
+  role: 'customer' | 'shop_owner' | 'admin' | 'staff';
   shop_name?: string;
   delete_shop?: boolean;
 }
@@ -89,8 +89,12 @@ export interface ResolveReportResponse {
   report: ReportDTO;
 }
 
+export interface DeleteUserResponse {
+  message: string;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService {
   private http = inject(HttpClient);
@@ -121,7 +125,10 @@ export class AdminService {
   }
 
   verifyShop(shopId: number): Observable<MutationResponse<{ shop_id: number; status: string }>> {
-    return this.http.post<MutationResponse<{ shop_id: number; status: string }>>(`${this.apiUrl}/shops/${shopId}/verify`, {});
+    return this.http.post<MutationResponse<{ shop_id: number; status: string }>>(
+      `${this.apiUrl}/shops/${shopId}/verify`,
+      {},
+    );
   }
 
   getReports(): Observable<ReportDTO[]> {
@@ -130,5 +137,9 @@ export class AdminService {
 
   resolveReport(reportId: number): Observable<ResolveReportResponse> {
     return this.http.post<ResolveReportResponse>(`${this.apiUrl}/reports/${reportId}/resolve`, {});
+  }
+
+  deleteUser(userId: number): Observable<DeleteUserResponse> {
+    return this.http.delete<DeleteUserResponse>(`${this.apiUrl}/users/${userId}`);
   }
 }

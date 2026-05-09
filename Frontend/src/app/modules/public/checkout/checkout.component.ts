@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, effect, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SavedItemsService } from '../../../core/services/saved-items.service';
 import { OrderService } from '../../../core/services/order';
@@ -24,6 +24,7 @@ interface SavedItem {
   imports: [CommonModule, FormsModule, AlertComponent, SkeletonComponent, EmptyStateComponent],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutComponent implements OnInit {
   private savedItemsService = inject(SavedItemsService);

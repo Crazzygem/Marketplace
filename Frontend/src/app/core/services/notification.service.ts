@@ -10,7 +10,7 @@ export interface Notification {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
   private notifications = signal<Notification[]>([]);
@@ -50,9 +50,7 @@ export class NotificationService {
    * Remove a specific notification by ID
    */
   remove(id: string): void {
-    this.notifications.update(current => 
-      current.filter(n => n.id !== id)
-    );
+    this.notifications.update((current) => current.filter((n) => n.id !== id));
   }
 
   /**
@@ -68,10 +66,10 @@ export class NotificationService {
       id,
       type,
       message,
-      duration: duration ?? this.defaultDuration
+      duration: duration ?? this.defaultDuration,
     };
 
-    this.notifications.update(current => [...current, notification]);
+    this.notifications.update((current) => [...current, notification]);
 
     // Auto-remove after duration
     setTimeout(() => {

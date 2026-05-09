@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -45,6 +45,7 @@ export interface StaffMember {
     SkeletonComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShopSettingsComponent implements OnInit {
   private shopService = inject(ShopService);
@@ -53,6 +54,7 @@ export class ShopSettingsComponent implements OnInit {
   private router = inject(Router);
   private logger = inject(LoggerService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
 
   activeTab = 'shop';
 
@@ -71,6 +73,14 @@ export class ShopSettingsComponent implements OnInit {
 
   shopData: any = null;
   shopLoading = false;
+  saveLoading = false;
+  shopForm = {
+    shop_name: '',
+    description: '',
+    contact_email: '',
+    contact_phone: '',
+    address: '',
+  };
 
   listings: any[] = [];
   listingsLoading = false;
@@ -122,22 +132,45 @@ export class ShopSettingsComponent implements OnInit {
     this.shopLoading = true;
     this.shopService.getShopStats().subscribe({
       next: (response: any) => {
-        this.shopData = response.shop_details;
+        this.shopData = response.shop;
+        if (this.shopData) {
+          this.shopForm = {
+            shop_name: this.shopData.shop_name || '',
+            description: this.shopData.description || '',
+            contact_email: this.shopData.contact_email || '',
+            contact_phone: this.shopData.contact_phone || '',
+            address: this.shopData.address || '',
+          };
+        }
         this.shopLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading shop settings:', error);
         this.shopLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
 
   saveShopSettings() {
-    this.showAlertMessage(
-      'success',
-      'Settings Saved',
-      'Your shop settings have been updated successfully.',
-    );
+    this.saveLoading = true;
+    this.shopService.updateMyShop(this.shopForm).subscribe({
+      next: (response: any) => {
+        this.shopData = response.shop;
+        this.saveLoading = false;
+        this.notificationService.success('Shop settings updated successfully.');
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        this.logger.error('Error updating shop settings:', error);
+        this.saveLoading = false;
+        this.notificationService.error(
+          error.error?.message || 'Failed to update shop settings.',
+        );
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   loadListings() {
@@ -148,11 +181,13 @@ export class ShopSettingsComponent implements OnInit {
       next: (response: any) => {
         this.listings = response.data || response;
         this.listingsLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading listings:', error);
         this.errorMessage = 'Failed to load listings';
         this.listingsLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -199,11 +234,13 @@ export class ShopSettingsComponent implements OnInit {
         this.staff = response.data || response || [];
         this.staffLoading = false;
         this.staffLoaded = true;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading staff:', error);
         this.staffLoading = false;
         this.staffLoaded = true;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -221,12 +258,14 @@ export class ShopSettingsComponent implements OnInit {
         this.staffForm.email = '';
         this.loadStaff();
         this.staffFormLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error adding staff:', error);
         const message = error.error?.message || 'Failed to add staff member';
         this.notificationService.error(message);
         this.staffFormLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -239,10 +278,12 @@ export class ShopSettingsComponent implements OnInit {
         next: () => {
           this.notificationService.success('Staff member removed successfully');
           this.staff = this.staff.filter((s) => s.member_id !== staffMember.member_id);
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error removing staff:', error);
           this.notificationService.error('Failed to remove staff member');
+          this.cdr.markForCheck();
         },
       });
     }
@@ -318,10 +359,12 @@ export class ShopSettingsComponent implements OnInit {
           localStorage.setItem('listingUpdated', Date.now().toString());
           this.showAlertMessage('success', 'Listing Deleted', 'The listing has been deleted.');
           this.loadListings();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error deleting listing:', error);
           this.showAlertMessage('danger', 'Delete Failed', 'Failed to delete the listing.');
+          this.cdr.markForCheck();
         },
       });
     }
@@ -341,10 +384,12 @@ export class ShopSettingsComponent implements OnInit {
             'Marked as Sold',
             `"${listing.title}" has been marked as sold.`,
           );
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error marking listing as sold:', error);
           this.showAlertMessage('danger', 'Action Failed', 'Failed to mark listing as sold.');
+          this.cdr.markForCheck();
         },
       });
     }
@@ -364,10 +409,12 @@ export class ShopSettingsComponent implements OnInit {
             'Restocked',
             `"${listing.title}" is now available again.`,
           );
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.logger.error('Error restocking listing:', error);
           this.showAlertMessage('danger', 'Action Failed', 'Failed to restock listing.');
+          this.cdr.markForCheck();
         },
       });
     }

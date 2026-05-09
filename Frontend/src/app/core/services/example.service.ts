@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
  * This service provides utility methods for common operations.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExampleService {
   constructor() {}

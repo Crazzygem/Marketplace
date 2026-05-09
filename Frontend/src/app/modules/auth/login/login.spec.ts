@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { LoginComponent } from './login';
 import { AuthService } from '../../../core/services/auth';
 import { NotificationService } from '../../../core/services/notification.service';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -17,8 +18,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule],
-      declarations: [LoginComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule, LoginComponent],
       providers: [AuthService, NotificationService],
     }).compileComponents();
 
@@ -33,9 +33,9 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have email and password fields', () => {
-    expect(component.email).toBe('');
-    expect(component.password).toBe('');
+  it('should have email and password signals initialized', () => {
+    expect(component.email()).toBe('');
+    expect(component.password()).toBe('');
   });
 
   it('should render form with email and password inputs', () => {
@@ -54,8 +54,8 @@ describe('LoginComponent', () => {
   it('should call login on form submit', () => {
     const loginSpy = spyOn(authService, 'login').and.callThrough();
 
-    component.email = 'test@example.com';
-    component.password = 'password123';
+    component.email.set('test@example.com');
+    component.password.set('password123');
 
     component.onSubmit();
 
@@ -76,13 +76,14 @@ describe('LoginComponent', () => {
       } as any;
     });
 
-    component.email = 'test@example.com';
-    component.password = 'wrongpassword';
+    component.email.set('test@example.com');
+    component.password.set('wrongpassword');
 
     component.onSubmit();
 
     expect(loginSpy).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalledWith('Login failed');
+    expect(component.errorMessage()).toBe('Login failed');
   });
 
   it('should navigate to admin dashboard on admin login', () => {
@@ -100,8 +101,8 @@ describe('LoginComponent', () => {
     spyOn(authService, 'isAdmin').and.returnValue(true);
     spyOn(authService, 'isShopOwner').and.returnValue(false);
 
-    component.email = 'admin@test.com';
-    component.password = 'adminpass';
+    component.email.set('admin@test.com');
+    component.password.set('adminpass');
 
     component.onSubmit();
 
@@ -123,8 +124,8 @@ describe('LoginComponent', () => {
     spyOn(authService, 'isAdmin').and.returnValue(false);
     spyOn(authService, 'isShopOwner').and.returnValue(true);
 
-    component.email = 'shopowner@test.com';
-    component.password = 'shoppass';
+    component.email.set('shopowner@test.com');
+    component.password.set('shoppass');
 
     component.onSubmit();
 
@@ -146,11 +147,43 @@ describe('LoginComponent', () => {
     spyOn(authService, 'isAdmin').and.returnValue(false);
     spyOn(authService, 'isShopOwner').and.returnValue(false);
 
-    component.email = 'user@test.com';
-    component.password = 'userpass';
+    component.email.set('user@test.com');
+    component.password.set('userpass');
 
     component.onSubmit();
 
     expect(navigateSpy).toHaveBeenCalledWith(['/public/home']);
+  });
+
+  it('should toggle password visibility', () => {
+    expect(component.showPassword()).toBe(false);
+    component.togglePassword();
+    expect(component.showPassword()).toBe(true);
+    component.togglePassword();
+    expect(component.showPassword()).toBe(false);
+  });
+
+  it('should have valid form when all fields are filled correctly', () => {
+    component.email.set('test@example.com');
+    component.password.set('password123');
+    fixture.detectChanges();
+
+    expect(component.isFormValid()).toBe(true);
+  });
+
+  it('should have invalid form when email is empty', () => {
+    component.email.set('');
+    component.password.set('password123');
+    fixture.detectChanges();
+
+    expect(component.isFormValid()).toBe(false);
+  });
+
+  it('should have invalid form when password is too short', () => {
+    component.email.set('test@example.com');
+    component.password.set('123');
+    fixture.detectChanges();
+
+    expect(component.isPasswordValid()).toBe(false);
   });
 });

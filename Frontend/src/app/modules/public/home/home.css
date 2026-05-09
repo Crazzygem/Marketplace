@@ -1,59 +1,12 @@
-/* Card image container for consistent square sizing */
-.card-img-container {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  padding-top: 100%; /* This creates a square aspect ratio (1:1) */
+/* Home component specific styles */
+/* ListingCardComponent handles card styling internally */
+
+/* Horizontal scroll for category filters on mobile */
+.d-flex.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
 }
 
-.card-img-container img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* This ensures image fills container while maintaining aspect ratio */
-  object-position: center; /* Centers image within container */
-}
-
-.no-image-placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--muted);
-}
-
-/* Ensure consistent card height */
+/* Ensure consistent card height through the component */
 .listing-card {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-}
-
-/* Custom styles for saved item buttons */
-.btn-saved {
-  background-color: var(--warning) !important;
-  border-color: var(--warning) !important;
-  color: var(--warning-foreground) !important;
-}
-
-.btn-saved:hover {
-  background-color: #d97706 !important;
-  border-color: #d97706 !important;
-}
-
-.btn-unsaved {
-  background-color: transparent !important;
-  border-color: var(--muted-foreground) !important;
-  color: var(--muted-foreground) !important;
-}
-
-.btn-unsaved:hover {
-  background-color: var(--muted-foreground) !important;
-  color: var(--background) !important;
 }

@@ -1,152 +1,111 @@
-<div class="container-fluid px-0">
+<div class="dashboard-container">
   <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Admin Dashboard</h2>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <div>
+        <h2 class="dashboard-title mb-1">Admin Dashboard</h2>
+        <p class="text-muted mb-0">Monitor platform performance and analytics</p>
+      </div>
       <div class="d-flex gap-2">
-        <button class="btn btn-outline-dark" routerLink="/admin/settings">
+        <button class="btn btn-outline-primary" routerLink="/admin/settings">
           <i class="fas fa-cog me-2"></i>Settings
         </button>
       </div>
     </div>
 
-    <div *ngIf="loading" class="py-4">
-      <!-- Loading Stats Cards -->
-      <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card shadow h-100 py-2">
-            <div class="card-body">
-              <app-skeleton height="60px" width="100%"></app-skeleton>
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="row g-4 mb-4">
+        @for (item of [1,2,3,4]; track item) {
+          <div class="col-sm-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <app-skeleton height="60px" width="100%"></app-skeleton>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card shadow h-100 py-2">
-            <div class="card-body">
-              <app-skeleton height="60px" width="100%"></app-skeleton>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card shadow h-100 py-2">
-            <div class="card-body">
-              <app-skeleton height="60px" width="100%"></app-skeleton>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card shadow h-100 py-2">
-            <div class="card-body">
-              <app-skeleton height="60px" width="100%"></app-skeleton>
-            </div>
-          </div>
-        </div>
+        }
       </div>
+    }
 
-      <!-- Loading Charts -->
-      <div class="row">
-        <div class="col-xl-8 col-lg-7">
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <app-skeleton height="300px" width="100%"></app-skeleton>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-4 col-lg-5">
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <app-skeleton height="300px" width="100%"></app-skeleton>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="!loading && dashboardStats">
+    <!-- Dashboard Content -->
+    @if (!loading && dashboardStats) {
       <!-- Stats Cards -->
-      <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card border-left-primary shadow h-100 py-2">
+      <div class="row g-4 mb-4">
+        <!-- Total Users -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-primary shadow-sm h-100">
             <div class="card-body">
-              <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                  <div class="d-flex align-items-center mb-1">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase me-2">
-                      Total Users
-                    </div>
-                    <app-badge variant="default" [text]="'Active'" [dot]="true"></app-badge>
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-primary text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-users me-2"></i>Total Users
                   </div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    {{ dashboardStats.stats?.total_users }}
-                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">{{ dashboardStats.totalUsers || 0 }}</div>
+                  <app-badge variant="info" text="Active" [dot]="true" class="mt-2"></app-badge>
                 </div>
-                <div class="col-auto">
-                  <i class="fas fa-users fa-2x text-gray-300"></i>
+                <div class="stat-icon">
+                  <i class="fas fa-users fa-2x opacity-50"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card border-left-success shadow h-100 py-2">
+
+        <!-- Total Shops -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-success shadow-sm h-100">
             <div class="card-body">
-              <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                  <div class="d-flex align-items-center mb-1">
-                    <div class="text-xs font-weight-bold text-success text-uppercase me-2">
-                      Total Shops
-                    </div>
-                    <app-badge variant="success" [text]="'Active'" [dot]="true"></app-badge>
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-success text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-store me-2"></i>Total Shops
                   </div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    {{ dashboardStats.stats?.total_shops }}
-                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">{{ dashboardStats.totalShops || 0 }}</div>
+                  <app-badge variant="success" text="Active" [dot]="true" class="mt-2"></app-badge>
                 </div>
-                <div class="col-auto">
-                  <i class="fas fa-store fa-2x text-gray-300"></i>
+                <div class="stat-icon">
+                  <i class="fas fa-store fa-2x opacity-50"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card border-left-warning shadow h-100 py-2">
+
+        <!-- Total Revenue -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-info shadow-sm h-100">
             <div class="card-body">
-              <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                  <div class="d-flex align-items-center mb-1">
-                    <div class="text-xs font-weight-bold text-warning text-uppercase me-2">
-                      Pending Shops
-                    </div>
-                    <app-badge variant="warning" [text]="'Pending'" [dot]="true"></app-badge>
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-info text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-dollar-sign me-2"></i>Total Revenue
                   </div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    {{ dashboardStats.stats?.pending_shops }}
-                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">${{ dashboardStats.totalRevenue || 0 }}</div>
+                  <app-badge variant="info" text="Collected" [dot]="true" class="mt-2"></app-badge>
                 </div>
-                <div class="col-auto">
-                  <i class="fas fa-clock fa-2x text-gray-300"></i>
+                <div class="stat-icon">
+                  <i class="fas fa-dollar-sign fa-2x opacity-50"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card border-left-info shadow h-100 py-2">
+
+        <!-- Pending Shops -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-warning shadow-sm h-100">
             <div class="card-body">
-              <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                  <div class="d-flex align-items-center mb-1">
-                    <div class="text-xs font-weight-bold text-info text-uppercase me-2">
-                      Total Revenue
-                    </div>
-                    <app-badge variant="info" [text]="'Collected'" [dot]="true"></app-badge>
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-warning text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-clock me-2"></i>Pending Shops
                   </div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    ${{ dashboardStats.stats?.total_revenue || 0 }}
-                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">{{ dashboardStats.stats?.pending_shops || 0 }}</div>
+                  <app-badge variant="warning" text="Pending" [dot]="true" class="mt-2"></app-badge>
                 </div>
-                <div class="col-auto">
-                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                <div class="stat-icon">
+                  <i class="fas fa-clock fa-2x opacity-50"></i>
                 </div>
               </div>
             </div>
@@ -155,104 +114,65 @@
       </div>
 
       <!-- Charts -->
-      <div class="row">
-        <div class="col-xl-8 col-lg-7">
-          <div class="card shadow mb-4">
-            <div
-              class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-            >
-              <h6 class="m-0 font-weight-bold text-primary">User Growth</h6>
-              <div class="dropdown no-arrow">
-                <a
-                  class="dropdown-toggle"
-                  href="#"
-                  role="button"
-                  id="dropdownMenuLink"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                  aria-labelledby="dropdownMenuLink"
-                >
-                  <div class="dropdown-header">Dropdown Header:</div>
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </div>
+      <div class="row g-4 mb-4">
+        <!-- User Growth (Line Chart) -->
+        <div class="col-lg-8">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-white py-3">
+              <h4 class="mb-0 fw-semibold">
+                <i class="fas fa-chart-line me-2 text-primary"></i>User Growth
+              </h4>
             </div>
             <div class="card-body">
-              <div class="chart-area">
-                <canvas
-                  baseChart
-                  [data]="lineChartData"
-                  [options]="lineChartOptions"
+              <div class="chart-container">
+                <canvas baseChart 
+                  [data]="lineChartData" 
+                  [options]="lineChartOptions" 
                   [type]="'line'"
-                >
+                  height="250">
                 </canvas>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-xl-4 col-lg-5">
-          <div class="card shadow mb-4">
-            <div
-              class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-            >
-              <h6 class="m-0 font-weight-bold text-primary">Category Distribution</h6>
-              <div class="dropdown no-arrow">
-                <a
-                  class="dropdown-toggle"
-                  href="#"
-                  role="button"
-                  id="dropdownMenuLink2"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                  aria-labelledby="dropdownMenuLink2"
-                >
-                  <div class="dropdown-header">Dropdown Header:</div>
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </div>
+        <!-- Category Distribution (Pie Chart) -->
+        <div class="col-lg-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-white py-3">
+              <h4 class="mb-0 fw-semibold">
+                <i class="fas fa-chart-pie me-2 text-success"></i>Category Distribution
+              </h4>
             </div>
             <div class="card-body">
-              <div class="chart-pie pt-4 pb-2">
-                <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="'pie'">
+              <div class="chart-container">
+                <canvas baseChart 
+                  [data]="pieChartData" 
+                  [options]="pieChartOptions" 
+                  [type]="'pie'"
+                  height="250">
                 </canvas>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    }
 
-    <div *ngIf="!loading && !dashboardStats" class="py-4">
-      <app-alert
-        variant="warning"
-        title="No Dashboard Data"
-        [showIcon]="true"
-      >
-        <p>
-          There is currently no dashboard data to display. This could be due to a connection issue or
-          no data being available.
-        </p>
-        <button class="btn btn-primary mt-2" (click)="loadDashboardStats()">Retry</button>
-      </app-alert>
-    </div>
+    <!-- No Data State -->
+    @if (!loading && !dashboardStats) {
+      <div class="alert alert-warning shadow-sm" role="alert">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+          <div class="flex-grow-1">
+            <h4 class="alert-heading mb-1">No Dashboard Data</h4>
+            <p class="mb-0">There is currently no dashboard data to display. This could be due to a connection issue.</p>
+          </div>
+          <button class="btn btn-primary ms-3" (click)="loadDashboardStats()">
+            <i class="fas fa-sync me-2"></i>Retry
+          </button>
+        </div>
+      </div>
+    }
   </div>
 </div>

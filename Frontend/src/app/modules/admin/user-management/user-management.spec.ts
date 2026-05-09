@@ -11,14 +11,9 @@ describe('UserManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        FormsModule
-      ],
-      declarations: [UserManagementComponent]
-    })
-    .compileComponents();
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule],
+      declarations: [UserManagementComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(UserManagementComponent);
     component = fixture.componentInstance;

@@ -37,7 +37,7 @@ class AdminMiddlewareTest extends TestCase
 
         $response = $middleware->handle($request, fn () => response('next'));
 
-        $this->assertEquals(403, $response->getStatus());
-        $this->assertJson(['message' => 'Unauthorized'], $response->getData(true));
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(['message' => 'Unauthorized: Admin access required'], $response->getData(true));
     }
 }

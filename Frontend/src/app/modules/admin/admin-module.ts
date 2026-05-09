@@ -14,14 +14,12 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
 // Components
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard';
 import { UserManagementComponent } from './user-management/user-management';
+import { StaffManagementComponent } from './staff-management/staff-management.component';
 import { ModerationComponent } from './moderation/moderation';
 import { SettingsComponent } from './settings/settings';
 
 @NgModule({
-  declarations: [
-    AdminDashboardComponent,
-    UserManagementComponent,
-  ],
+  declarations: [AdminDashboardComponent, UserManagementComponent, StaffManagementComponent],
   imports: [
     CommonModule,
     FormsModule,

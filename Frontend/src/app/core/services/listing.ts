@@ -20,7 +20,7 @@ export interface ListingQueryParams {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ListingService {
   private http = inject(HttpClient);
@@ -28,9 +28,9 @@ export class ListingService {
 
   getListings(params?: ListingQueryParams): Observable<PaginatedResponse<Listing> | Listing[]> {
     let httpParams = new HttpParams();
-    
+
     if (params) {
-      Object.keys(params).forEach(key => {
+      Object.keys(params).forEach((key) => {
         const value = params[key as keyof ListingQueryParams];
         if (value !== undefined && value !== null) {
           // Handle boolean values - convert to string for API
@@ -42,8 +42,10 @@ export class ListingService {
         }
       });
     }
-    
-    return this.http.get<PaginatedResponse<Listing> | Listing[]>(this.apiUrl, { params: httpParams });
+
+    return this.http.get<PaginatedResponse<Listing> | Listing[]>(this.apiUrl, {
+      params: httpParams,
+    });
   }
 
   getListing(id: number): Observable<Listing> {

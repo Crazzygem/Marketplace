@@ -1,25 +1,25 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ListingService } from '../../../core/services/listing';
 import { CategoryService } from '../../../core/services/category';
 import { AuthService } from '../../../core/services/auth';
 import { SavedItemsService } from '../../../core/services/saved-items.service';
 import { Listing } from '../../../core/models/listing';
 import { Category } from '../../../core/models/category';
-import { getImageUrl } from '../../../shared/utils/image.utils';
 import { LoggerService } from '../../../core/services/logger.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { CategoryIconService } from '../../../core/services/category-icon.service';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { ListingCardComponent } from '../../../shared/components/listing-card/listing-card.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, AlertComponent]
+  imports: [CommonModule, FormsModule, ListingCardComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
   private listingService = inject(ListingService);
@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private logger = inject(LoggerService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
   categoryIconService = inject(CategoryIconService);
 
   listings: Listing[] = [];
@@ -37,7 +38,7 @@ export class HomeComponent implements OnInit {
   loading = false;
 
   get popularCategories(): Category[] {
-    return this.categories.filter(c => c.is_popular);
+    return this.categories.filter((c) => c.is_popular);
   }
 
   getIcon(iconName: string | undefined): string {
@@ -55,7 +56,7 @@ export class HomeComponent implements OnInit {
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
-    itemsPerPage: 12
+    itemsPerPage: 12,
   };
 
   ngOnInit() {
@@ -74,10 +75,12 @@ export class HomeComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (response: any) => {
         this.categories = response.data || response;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading categories:', error);
-      }
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -86,7 +89,7 @@ export class HomeComponent implements OnInit {
 
     const params: any = {
       page: page,
-      per_page: this.pagination.itemsPerPage
+      per_page: this.pagination.itemsPerPage,
     };
 
     if (this.searchQuery) {
@@ -121,11 +124,13 @@ export class HomeComponent implements OnInit {
         }
 
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.logger.error('Error loading listings:', error);
         this.loading = false;
-      }
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -164,9 +169,6 @@ export class HomeComponent implements OnInit {
     return pages;
   }
 
-  // Use shared utility for image URL
-  getImageUrl = getImageUrl;
-
   sellSomething() {
     if (!this.authService.isAuthenticated()) {
       // If not logged in, redirect to login
@@ -187,12 +189,14 @@ export class HomeComponent implements OnInit {
     this.savedItemsService.toggleSaved(listing).subscribe({
       next: (response: any) => {
         // Show success message based on the response
-        this.notificationService.success(response.is_saved ? 'Added to saved items!' : 'Removed from saved items!');
+        this.notificationService.success(
+          response.is_saved ? 'Added to saved items!' : 'Removed from saved items!',
+        );
       },
       error: (error) => {
         this.logger.error('Error toggling saved status:', error);
         this.notificationService.error('Failed to update saved status. Please try again.');
-      }
+      },
     });
   }
 }

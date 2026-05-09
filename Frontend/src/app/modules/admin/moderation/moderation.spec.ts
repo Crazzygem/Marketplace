@@ -11,14 +11,9 @@ describe('ModerationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-        FormsModule
-      ],
-      declarations: [ModerationComponent]
-    })
-    .compileComponents();
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule],
+      declarations: [ModerationComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModerationComponent);
     component = fixture.componentInstance;

@@ -112,7 +112,10 @@ class OrderCreationTest extends TestCase
     {
         $seller = User::factory()->shopOwner()->create();
         $shop = \App\Models\Shop::factory()->create(['owner_id' => $seller->id]);
-        $listing = Listing::factory()->create(['shop_id' => $shop->shop_id]);
+        $listing = Listing::factory()->create([
+            'shop_id' => $shop->shop_id,
+            'sales_count' => 0,
+        ]);
         $order = Order::factory()->create([
             'listing_id' => $listing->listing_id,
             'status' => 'Pending',

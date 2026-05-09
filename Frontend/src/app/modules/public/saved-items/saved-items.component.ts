@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, effect, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SavedItemsService, SavedItem } from '../../../core/services/saved-items.service';
 import { AuthService } from '../../../core/services/auth';
@@ -13,9 +13,16 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-saved-items',
   standalone: true,
-  imports: [CommonModule, FormsModule, ListingCardComponent, EmptyStateComponent, SkeletonComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ListingCardComponent,
+    EmptyStateComponent,
+    SkeletonComponent,
+  ],
   templateUrl: './saved-items.component.html',
-  styleUrls: ['./saved-items.component.css']
+  styleUrls: ['./saved-items.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SavedItemsComponent implements OnInit {
   private savedItemsService = inject(SavedItemsService);

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule } from '@angular/forms';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { ShopDashboardComponent } from './shop-dashboard';
 
@@ -11,8 +11,8 @@ describe('ShopDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule],
-      declarations: [ShopDashboardComponent],
+      imports: [ShopDashboardComponent, RouterTestingModule, HttpClientTestingModule],
+      providers: [provideCharts(withDefaultRegisterables())],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ShopDashboardComponent);
