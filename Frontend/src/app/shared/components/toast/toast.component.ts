@@ -50,9 +50,9 @@ import { NotificationService, Notification } from '../../../core/services/notifi
         align-items: center;
         justify-content: space-between;
         padding: 12px 16px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        background: var(--card);
         min-width: 300px;
         position: relative;
         overflow: hidden;

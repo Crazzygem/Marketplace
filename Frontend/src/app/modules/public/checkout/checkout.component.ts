@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { BadgeComponent } from '../../../shared/components/badge/badge.component';
 
 interface SavedItem {
   listing: Listing;
@@ -21,7 +22,14 @@ interface SavedItem {
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertComponent, SkeletonComponent, EmptyStateComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AlertComponent,
+    SkeletonComponent,
+    EmptyStateComponent,
+    BadgeComponent,
+  ],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

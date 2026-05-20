@@ -11,4 +11,5 @@ import { CommonModule } from '@angular/common';
 export class SkeletonComponent {
   @Input() height: string = '1rem';
   @Input() width: string = '100%';
+  @Input() variant: 'rect' | 'circular' = 'rect';
 }

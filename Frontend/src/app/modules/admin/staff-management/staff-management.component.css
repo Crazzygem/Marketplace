@@ -7,29 +7,6 @@
   overflow: hidden;
 }
 
-.table-dark {
-  background-color: var(--primary) !important;
-}
-
-/* Avatar Styles */
-.avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: var(--muted);
-  font-weight: 600;
-  color: var(--foreground);
-  aspect-ratio: 1/1;
-}
-
-.avatar-sm {
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 0.875rem;
-}
-
 /* Button Group Spacing */
 .btn-group {
   gap: 0.25rem;
@@ -44,52 +21,20 @@
   .table-responsive {
     overflow-x: auto;
   }
-  
+
   .btn-group {
     flex-direction: column;
   }
-  
+
   .btn-group .btn {
     width: 100%;
     margin-bottom: 0.25rem;
   }
-  
+
   .d-flex.justify-content-between {
     flex-direction: column;
     gap: 1rem;
   }
-  
-  .pagination {
-    justify-content: center;
-  }
-}
-
-/* Empty State */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-xl);
-  text-align: center;
-}
-
-.empty-state-icon {
-  font-size: 4rem;
-  color: var(--muted-foreground);
-  margin-bottom: var(--spacing-md);
-}
-
-.empty-state-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--foreground);
-  margin-bottom: var(--spacing-sm);
-}
-
-.empty-state-description {
-  color: var(--muted-foreground);
-  margin-bottom: 0;
 }
 
 /* Skeleton Loading */
@@ -116,7 +61,7 @@
 
 .form-control:focus {
   border-color: var(--ring);
-  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+  box-shadow: var(--ring-shadow);
 }
 
 /* Badge Alignment */
@@ -147,28 +92,6 @@ app-badge {
   background-color: var(--warning);
   border-color: var(--warning);
   color: var(--warning-foreground);
-}
-
-/* Pagination */
-.pagination .page-link {
-  color: var(--primary);
-  border-color: var(--border);
-}
-
-.pagination .page-item.active .page-link {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: var(--primary-foreground);
-}
-
-.pagination .page-link:hover {
-  background-color: var(--muted);
-  border-color: var(--border);
-}
-
-/* Icon Spacing */
-.bi {
-  margin-right: 0.25rem;
 }
 
 /* Card Shadow */

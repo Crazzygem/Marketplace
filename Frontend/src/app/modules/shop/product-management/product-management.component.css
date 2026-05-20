@@ -37,8 +37,12 @@
 .settings-page .form-control:focus,
 .settings-page .form-select:focus {
   border-color: var(--ring);
-  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+  box-shadow: var(--ring-shadow);
   outline: none;
+}
+
+.status-select {
+  max-width: 200px;
 }
 
 .settings-page .form-text {
@@ -109,6 +113,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.remove-image-btn {
+  top: 4px;
+  right: 4px;
 }
 
 .text-success {

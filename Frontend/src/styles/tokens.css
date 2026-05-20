@@ -79,6 +79,12 @@
 
   /* ==================== Typography ==================== */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* ==================== Interaction ==================== */
+  --ring-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+  --primary-subtle: rgba(15, 23, 42, 0.1);
+  --destructive-hover: #dc2626;
+  --warning-hover: #d97706;
 }
 
 /* ==================== Bootstrap Override Classes ==================== */
@@ -210,15 +216,15 @@
 }
 
 .btn-semantic-destructive:hover {
-  background-color: #dc2626;
-  border-color: #dc2626;
+  background-color: var(--destructive-hover);
+  border-color: var(--destructive-hover);
 }
 
 /* Input focus ring */
 .form-control:focus,
 .form-select:focus {
   border-color: var(--ring);
-  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+  box-shadow: var(--ring-shadow);
 }
 
 /* Badge variants using semantic tokens */
@@ -425,21 +431,14 @@
   outline-offset: 2px;
 }
 
-/* Card with shadow */
-.card-shadow-sm {
-  box-shadow: var(--shadow-sm);
+/* Cursor utility */
+.cursor-pointer {
+  cursor: pointer;
 }
 
-.card-shadow {
-  box-shadow: var(--shadow);
-}
-
-.card-shadow-md {
-  box-shadow: var(--shadow-md);
-}
-
-.card-shadow-lg {
-  box-shadow: var(--shadow-lg);
+/* Circular skeleton variant */
+.skeleton-circular {
+  border-radius: 50%;
 }
 
 /* Badge with dot indicator */
@@ -520,15 +519,6 @@
 
 .text-xl {
   font-size: 1.5rem !important;
-}
-
-/* Gray text utilities - for stat cards */
-.text-gray-300 {
-  color: #d1d5db !important;
-}
-
-.text-gray-800 {
-  color: #1f2937 !important;
 }
 
 /* Text transformation utility */
@@ -655,12 +645,12 @@
 .form-select:focus,
 .form-check-input:focus {
   border-color: var(--ring) !important;
-  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1) !important;
+  box-shadow: var(--ring-shadow) !important;
 }
 
 /* Alert overrides */
 .alert-primary {
-  background-color: rgba(15, 23, 42, 0.1) !important;
+  background-color: var(--primary-subtle) !important;
   border-color: var(--primary) !important;
   color: var(--primary) !important;
 }

@@ -12,6 +12,7 @@ import { TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { BadgeComponent } from '../../../shared/components/badge/badge.component';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { NavigationEnd } from '@angular/router';
@@ -43,6 +44,7 @@ export interface StaffMember {
     BadgeComponent,
     AlertComponent,
     SkeletonComponent,
+    EmptyStateComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -346,6 +348,13 @@ export class ShopSettingsComponent implements OnInit {
    */
   editListing(listingId: number) {
     this.router.navigate(['/shop/products/edit', listingId]);
+  }
+
+  /**
+   * Navigate to add listing page
+   */
+  addListing() {
+    this.router.navigate(['/shop/products/add']);
   }
 
   /**

@@ -6,7 +6,6 @@ import { ShopRoutingModule } from './shop-routing-module';
 import { BaseChartDirective, provideCharts } from 'ng2-charts';
 import { withDefaultRegisterables } from 'ng2-charts';
 
-import { StaffManagementComponent } from './staff-management/staff-management';
 import { ShopCreateComponent } from './create/shop-create.component';
 import { ProductManagementComponent } from './product-management/product-management.component';
 // ProductList removed - all product management moved to Settings → Listings tab
@@ -15,7 +14,7 @@ import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 
 @NgModule({
-  declarations: [StaffManagementComponent, ShopCreateComponent],
+  declarations: [ShopCreateComponent],
   imports: [
     CommonModule,
     FormsModule,

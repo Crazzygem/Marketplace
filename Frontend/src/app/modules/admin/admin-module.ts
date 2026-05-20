@@ -10,13 +10,14 @@ import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 // Components
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard';
-import { UserManagementComponent } from './user-management/user-management';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { UserManagementComponent } from './user-management/user-management.component';
 import { StaffManagementComponent } from './staff-management/staff-management.component';
-import { ModerationComponent } from './moderation/moderation';
-import { SettingsComponent } from './settings/settings';
+import { ModerationComponent } from './moderation/moderation.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [AdminDashboardComponent, UserManagementComponent, StaffManagementComponent],
@@ -29,6 +30,7 @@ import { SettingsComponent } from './settings/settings';
     BadgeComponent,
     AlertComponent,
     SkeletonComponent,
+    EmptyStateComponent,
   ],
   providers: [
     provideCharts(withDefaultRegisterables()), // Registers Chart.js controllers

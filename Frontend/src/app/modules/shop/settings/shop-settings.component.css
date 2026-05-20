@@ -18,6 +18,13 @@
   color: var(--muted-foreground);
 }
 
+/* Listing Thumbnail */
+.listing-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
 /* No Image Placeholder */
 .no-image {
   width: 50px;
@@ -102,7 +109,7 @@
 .settings-page .form-control:focus,
 .settings-page .form-select:focus {
   border-color: var(--ring);
-  box-shadow: 0 0 0 0.25rem rgba(15, 23, 42, 0.1);
+  box-shadow: var(--ring-shadow);
 }
 
 .settings-page .input-group-text {
@@ -160,7 +167,7 @@
 }
 
 .payment-method-item:hover {
-  background-color: rgba(15, 23, 42, 0.1);
+  background-color: var(--primary-subtle);
   transform: translateX(4px);
 }
 

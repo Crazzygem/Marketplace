@@ -45,7 +45,7 @@ import { AuthService } from '../../../core/services/auth';
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Logout</a>
+                  <a class="dropdown-item cursor-pointer" (click)="logout()">Logout</a>
                 </li>
               </ul>
             </li>

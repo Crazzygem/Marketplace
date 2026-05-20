@@ -13,6 +13,8 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { TabsComponent, TabItem } from '../../shared/components/tabs/tabs.component';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -25,6 +27,8 @@ import { AlertComponent } from '../../shared/components/alert/alert.component';
     BadgeComponent,
     TabsComponent,
     AlertComponent,
+    SkeletonComponent,
+    EmptyStateComponent,
   ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
@@ -277,5 +281,9 @@ export class UserProfileComponent implements OnInit {
     } else {
       this.notificationService.info('You can create a shop to start selling!');
     }
+  }
+
+  goToHome() {
+    this.router.navigate(['/public/home']);
   }
 }

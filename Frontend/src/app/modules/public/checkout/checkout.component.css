@@ -13,3 +13,7 @@
   background-color: var(--primary);
   border-color: var(--primary);
 }
+
+.checkout-sidebar {
+  top: 20px;
+}

@@ -1,0 +1,130 @@
+/* Shop Dashboard Styles */
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--muted);
+}
+
+.dashboard-title {
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 1.75rem;
+}
+
+/* Stat Cards */
+.stat-card {
+  border: none;
+  border-radius: var(--radius-lg, 0.75rem);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1)) !important;
+}
+
+.stat-card .card-body {
+  padding: 1.5rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  color: var(--foreground);
+}
+
+.stat-icon {
+  color: var(--muted-foreground);
+  opacity: 0.3;
+}
+
+/* Stat Card Color Variants */
+.stat-card-primary {
+  border-left: 4px solid var(--primary);
+}
+
+.stat-card-primary .stat-icon {
+  color: var(--primary);
+}
+
+.stat-card-success {
+  border-left: 4px solid var(--success);
+}
+
+.stat-card-success .stat-icon {
+  color: var(--success);
+}
+
+.stat-card-info {
+  border-left: 4px solid var(--info);
+}
+
+.stat-card-info .stat-icon {
+  color: var(--info);
+}
+
+.stat-card-warning {
+  border-left: 4px solid var(--warning);
+}
+
+.stat-card-warning .stat-icon {
+  color: var(--warning);
+}
+
+/* Chart Containers */
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+}
+
+/* Top items list truncation */
+.item-title {
+  max-width: 200px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-card .card-body {
+    padding: 1rem;
+  }
+
+  .chart-container {
+    min-height: 150px;
+  }
+
+  .d-flex.gap-2 .btn {
+    width: 100%;
+  }
+}
+
+/* Animation for loading states */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card,
+.card {
+  animation: fadeIn 0.3s ease-out;
+}

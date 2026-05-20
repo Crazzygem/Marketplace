@@ -7,7 +7,7 @@
           [src]="getImageUrl(listing.image_urls)"
           class="card-img-top"
           alt="{{ listing.title }}">
-        <div *ngIf="!getImageUrl(listing.image_urls)" class="card-img-top no-image-placeholder d-flex align-items-center justify-content-center" style="background-color: var(--muted);">
+        <div *ngIf="!getImageUrl(listing.image_urls)" class="card-img-top no-image-placeholder d-flex align-items-center justify-content-center">
           <span class="text-muted">No Image</span>
         </div>
       </a>

@@ -43,8 +43,8 @@
 }
 
 .btn-saved:hover {
-  background-color: #d97706 !important;
-  border-color: #d97706 !important;
+  background-color: var(--warning-hover) !important;
+  border-color: var(--warning-hover) !important;
 }
 
 .btn-unsaved {

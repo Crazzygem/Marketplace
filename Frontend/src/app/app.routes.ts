@@ -29,6 +29,6 @@ export const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () =>
-      import('./modules/user-profile/user-profile.module').then((m) => m.UserProfileModule),
+      import('./modules/user-profile/user-profile-module').then((m) => m.UserProfileModule),
   },
 ];

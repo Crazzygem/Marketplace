@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ShopDashboardComponent } from './shop-dashboard/shop-dashboard';
-import { StaffManagementComponent } from './staff-management/staff-management';
+import { ShopDashboardComponent } from './shop-dashboard/shop-dashboard.component';
 import { ProductManagementComponent } from './product-management/product-management.component';
 // ProductList removed - all product management moved to Settings → Listings tab
 import { ShopCreateComponent } from './create/shop-create.component';

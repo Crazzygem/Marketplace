@@ -147,29 +147,23 @@
             </div>
 
             <!-- Error State -->
-            <div
+            <app-alert
               *ngIf="errorMessage"
-              class="alert alert-danger d-flex align-items-center"
-              role="alert"
-            >
-              <i class="fas fa-exclamation-circle me-2"></i>
-              {{ errorMessage }}
-            </div>
+              variant="danger"
+              [title]="'Error'"
+              [description]="errorMessage"
+              [showIcon]="true"
+            ></app-alert>
 
             <!-- Empty State -->
-            <div
+            <app-empty-state
               *ngIf="!listingsLoading && listings.length === 0 && !errorMessage"
-              class="text-center py-5"
-            >
-              <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
-              <h5 class="text-muted">No Listings Yet</h5>
-              <p class="text-muted mb-4">
-                You haven't added any listings yet. Start by adding your first listing.
-              </p>
-              <button class="btn btn-primary" routerLink="/shop/products/add">
-                <i class="fas fa-plus me-2"></i>Add Your First Listing
-              </button>
-            </div>
+              icon="fa-box-open"
+              title="No Listings Yet"
+              description="You haven't added any listings yet. Start by adding your first listing."
+              actionText="Add Your First Listing"
+              (action)="addListing()"
+            ></app-empty-state>
 
             <!-- Listings Table -->
             <div
@@ -177,7 +171,7 @@
               class="table-responsive"
             >
               <table class="table table-hover mb-0">
-                <thead class="table-dark">
+                <thead>
                   <tr>
                     <th width="50"><input type="checkbox" (change)="selectAllListings()" /></th>
                     <th>Image</th>
@@ -204,8 +198,7 @@
                         <img
                           [src]="getImageUrl(listing.image_urls)"
                           [alt]="listing.title"
-                          class="rounded"
-                          style="width: 50px; height: 50px; object-fit: cover"
+                          class="rounded listing-thumb"
                         />
                       </div>
                       <div
@@ -217,7 +210,12 @@
                     </td>
                     <td>
                       <span class="fw-medium">{{ listing.title }}</span>
-                      <span *ngIf="listing.is_sold" class="badge bg-danger ms-2">SOLD</span>
+                      <app-badge
+                        *ngIf="listing.is_sold"
+                        variant="destructive"
+                        text="SOLD"
+                        class="ms-2"
+                      ></app-badge>
                     </td>
                     <td>
                       <span class="text-muted small">
@@ -337,7 +335,7 @@
               <!-- Staff List -->
               <div class="table-responsive" *ngIf="staff.length > 0">
                 <table class="table table-hover mb-0">
-                  <thead class="table-light">
+                  <thead>
                     <tr>
                       <th class="border-0">Name</th>
                       <th class="border-0">Email</th>
@@ -350,9 +348,12 @@
                     <tr *ngFor="let member of staff" class="align-middle">
                       <td class="fw-medium">
                         {{ member.user?.name || 'Unknown' }}
-                        <span *ngIf="member.role === 'owner'" class="badge bg-primary ms-2"
-                          >Owner</span
-                        >
+                        <app-badge
+                          *ngIf="member.role === 'owner'"
+                          variant="default"
+                          text="Owner"
+                          class="ms-2"
+                        ></app-badge>
                       </td>
                       <td class="text-muted">{{ member.user?.email || 'N/A' }}</td>
                       <td>
@@ -378,11 +379,12 @@
                 </table>
               </div>
 
-              <div class="text-center py-5" *ngIf="staff.length === 0">
-                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No Staff Members</h5>
-                <p class="text-muted">Add staff members by entering their email above.</p>
-              </div>
+              <app-empty-state
+                *ngIf="staff.length === 0"
+                icon="fa-users"
+                title="No Staff Members"
+                description="Add staff members by entering their email above."
+              ></app-empty-state>
             </div>
           </div>
         </div>

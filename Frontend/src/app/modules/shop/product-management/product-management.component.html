@@ -145,7 +145,6 @@
                     >
                       <option value="">Select a category</option>
                       <option *ngFor="let category of categories" [value]="category.category_id">
-                        <i class="fas {{ category.icon || 'fa-tag' }} me-2"></i>
                         {{ category.category_name }}
                       </option>
                     </select>
@@ -181,10 +180,9 @@
             <div class="card-body">
               <div class="d-flex align-items-center gap-3">
                 <select
-                  class="form-select"
+                  class="form-select status-select"
                   id="status"
                   name="status"
-                  style="max-width: 200px"
                   [(ngModel)]="productData.status"
                 >
                   <option value="Active">Active</option>
@@ -225,8 +223,7 @@
                     <img [src]="previewUrl" class="img-thumbnail" alt="Preview" />
                     <button
                       type="button"
-                      class="btn btn-danger btn-sm position-absolute"
-                      style="top: 4px; right: 4px"
+                      class="btn btn-danger btn-sm position-absolute remove-image-btn"
                       (click)="removeImage(i)"
                     >
                       <i class="fas fa-times"></i>

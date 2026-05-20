@@ -1,0 +1,42 @@
+/* Product image sizing */
+.product-image {
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.no-image-placeholder {
+  max-height: 500px;
+  background-color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+/* Custom styles for saved item buttons */
+.btn-saved {
+  background-color: var(--warning) !important;
+  border-color: var(--warning) !important;
+  color: var(--warning-foreground) !important;
+}
+
+.btn-saved:hover {
+  background-color: var(--warning-hover) !important;
+  border-color: var(--warning-hover) !important;
+}
+
+.btn-unsaved {
+  background-color: transparent !important;
+  border-color: var(--muted-foreground) !important;
+  color: var(--muted-foreground) !important;
+}
+
+.btn-unsaved:hover {
+  background-color: var(--muted-foreground) !important;
+  color: var(--background) !important;
+}

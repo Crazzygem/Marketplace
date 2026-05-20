@@ -1,0 +1,174 @@
+<div class="dashboard-container">
+  <div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <div>
+        <h2 class="dashboard-title mb-1">Admin Dashboard</h2>
+        <p class="text-muted mb-0">Monitor platform performance and analytics</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-primary" routerLink="/admin/settings">
+          <i class="fas fa-cog me-2"></i>Settings
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="row g-4 mb-4">
+        @for (item of [1,2,3,4]; track item) {
+          <div class="col-sm-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <app-skeleton height="60px" width="100%"></app-skeleton>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Dashboard Content -->
+    @if (!loading && dashboardStats) {
+      <!-- Stats Cards -->
+      <div class="row g-4 mb-4">
+        <!-- Total Users -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-primary shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-primary text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-users me-2"></i>Total Users
+                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">{{ dashboardStats.totalUsers || 0 }}</div>
+                  <app-badge variant="info" text="Active" [dot]="true" class="mt-2"></app-badge>
+                </div>
+                <div class="stat-icon">
+                  <i class="fas fa-users fa-2x opacity-50"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Shops -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-success shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-success text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-store me-2"></i>Total Shops
+                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">{{ dashboardStats.totalShops || 0 }}</div>
+                  <app-badge variant="success" text="Active" [dot]="true" class="mt-2"></app-badge>
+                </div>
+                <div class="stat-icon">
+                  <i class="fas fa-store fa-2x opacity-50"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Revenue -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-info shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-info text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-dollar-sign me-2"></i>Total Revenue
+                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">${{ dashboardStats.totalRevenue || 0 }}</div>
+                  <app-badge variant="info" text="Collected" [dot]="true" class="mt-2"></app-badge>
+                </div>
+                <div class="stat-icon">
+                  <i class="fas fa-dollar-sign fa-2x opacity-50"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Shops -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card stat-card stat-card-warning shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-content">
+                  <div class="stat-label text-warning text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-clock me-2"></i>Pending Shops
+                  </div>
+                  <div class="stat-value h3 mb-0 fw-bold">{{ dashboardStats.stats?.pending_shops || 0 }}</div>
+                  <app-badge variant="warning" text="Pending" [dot]="true" class="mt-2"></app-badge>
+                </div>
+                <div class="stat-icon">
+                  <i class="fas fa-clock fa-2x opacity-50"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="row g-4 mb-4">
+        <!-- User Growth (Line Chart) -->
+        <div class="col-lg-8">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-chart-line me-2 text-primary"></i>User Growth
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas baseChart 
+                  [data]="lineChartData" 
+                  [options]="lineChartOptions" 
+                  [type]="'line'"
+                  height="250">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Distribution (Pie Chart) -->
+        <div class="col-lg-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-chart-pie me-2 text-success"></i>Category Distribution
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas baseChart 
+                  [data]="pieChartData" 
+                  [options]="pieChartOptions" 
+                  [type]="'pie'"
+                  height="250">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- No Data State -->
+    @if (!loading && !dashboardStats) {
+      <app-alert
+        variant="warning"
+        title="No Dashboard Data"
+        description="There is currently no dashboard data to display. This could be due to a connection issue."
+      ></app-alert>
+      <button class="btn btn-primary" (click)="loadDashboardStats()">
+        <i class="fas fa-sync me-2"></i>Retry
+      </button>
+    }
+  </div>
+</div>

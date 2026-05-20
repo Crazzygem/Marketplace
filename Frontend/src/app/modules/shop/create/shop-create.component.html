@@ -2,11 +2,8 @@
   <div class="row justify-content-center">
     <div class="col-lg-8">
       <div class="card shadow-sm">
-        <div
-          class="card-header"
-          style="background-color: var(--primary); color: var(--primary-foreground)"
-        >
-          <h3 class="mb-0">Create Your Shop</h3>
+        <div class="card-header bg-primary">
+          <h2 class="fw-bold mb-0">Create Your Shop</h2>
         </div>
         <div class="card-body">
           <app-alert variant="info" [title]="'Why Create a Shop?'" [showIcon]="true" class="mb-4">
@@ -67,17 +64,13 @@
                 name="category"
                 [(ngModel)]="shopData.category"
               >
-                <option value="General"><i class="fas fa-box me-2"></i> General</option>
-                <option value="Electronics">
-                  <i class="fas fa-mobile-alt me-2"></i> Electronics
-                </option>
-                <option value="Fashion"><i class="fas fa-tshirt me-2"></i> Fashion</option>
-                <option value="Home &amp; Garden">
-                  <i class="fas fa-home me-2"></i> Home &amp; Garden
-                </option>
-                <option value="Sports"><i class="fas fa-running me-2"></i> Sports</option>
-                <option value="Books"><i class="fas fa-book me-2"></i> Books</option>
-                <option value="Other"><i class="fas fa-tag me-2"></i> Other</option>
+                <option value="General">General</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Home &amp; Garden">Home &amp; Garden</option>
+                <option value="Sports">Sports</option>
+                <option value="Books">Books</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 

@@ -1,5 +1,9 @@
 <div class="profile-page">
   <div class="container py-4">
+    <div class="mb-4">
+      <h2 class="fw-bold mb-1">My Profile</h2>
+      <p class="text-muted mb-0">Manage your account, orders, and security settings</p>
+    </div>
     <div class="row g-4">
       <!-- Sidebar -->
       <div class="col-lg-4">
@@ -67,26 +71,28 @@
 
         <!-- Overview Tab -->
         <div class="card shadow-sm mb-4 tab-content-card" *ngIf="activeTab === 'overview'">
-          <div class="card-header bg-transparent">
+          <div class="card-header bg-white">
             <h5 class="mb-0">Recent Orders</h5>
           </div>
           <div class="card-body p-0">
-            <div *ngIf="loading.orders" class="text-center py-5">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
+            <div *ngIf="loading.orders" class="p-3">
+              <app-skeleton height="3rem" width="100%" class="mb-2"></app-skeleton>
+              <app-skeleton height="3rem" width="100%" class="mb-2"></app-skeleton>
+              <app-skeleton height="3rem" width="100%"></app-skeleton>
             </div>
 
-            <div *ngIf="!loading.orders && orders.length === 0" class="text-center py-5">
-              <i class="fas fa-shopping-bag text-muted mb-3" style="font-size: 3rem"></i>
-              <h5>You haven't placed any orders yet</h5>
-              <p class="text-muted">Your order history will appear here</p>
-              <a routerLink="/public/home" class="btn btn-primary">Start Shopping</a>
-            </div>
+            <app-empty-state
+              *ngIf="!loading.orders && orders.length === 0"
+              icon="fa-shopping-bag"
+              title="You haven't placed any orders yet"
+              description="Your order history will appear here"
+              actionText="Start Shopping"
+              (action)="goToHome()"
+            ></app-empty-state>
 
             <div *ngIf="!loading.orders && orders.length > 0" class="table-responsive">
               <table class="table table-hover mb-0">
-                <thead class="table-light">
+                <thead>
                   <tr>
                     <th>Listing</th>
                     <th>Date</th>
@@ -96,7 +102,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let order of paginatedOrders" style="cursor: pointer">
+                  <tr *ngFor="let order of paginatedOrders" class="cursor-pointer">
                     <td>
                       <span class="text-primary fw-medium">
                         {{ order.listing?.title || 'N/A' }}
@@ -125,9 +131,8 @@
               <ul class="pagination justify-content-center">
                 <li class="page-item" [class.disabled]="pagination.currentPage === 1">
                   <a
-                    class="page-link"
+                    class="page-link cursor-pointer"
                     (click)="goToPage(pagination.currentPage - 1)"
-                    style="cursor: pointer"
                     >Previous</a
                   >
                 </li>
@@ -136,7 +141,7 @@
                   [class.active]="page === pagination.currentPage"
                   *ngFor="let page of getPages()"
                 >
-                  <a class="page-link" (click)="goToPage(page)" style="cursor: pointer">
+                  <a class="page-link cursor-pointer" (click)="goToPage(page)">
                     {{ page }}
                   </a>
                 </li>
@@ -145,9 +150,8 @@
                   [class.disabled]="pagination.currentPage === pagination.totalPages"
                 >
                   <a
-                    class="page-link"
+                    class="page-link cursor-pointer"
                     (click)="goToPage(pagination.currentPage + 1)"
-                    style="cursor: pointer"
                     >Next</a
                   >
                 </li>
@@ -158,7 +162,7 @@
 
         <!-- Personal Info Tab -->
         <div class="card shadow-sm mb-4 tab-content-card" *ngIf="activeTab === 'personal'">
-          <div class="card-header bg-transparent">
+          <div class="card-header bg-white">
             <h5 class="mb-0">Personal Information</h5>
           </div>
           <div class="card-body">
@@ -244,7 +248,7 @@
 
         <!-- Security Tab -->
         <div class="card shadow-sm tab-content-card" *ngIf="activeTab === 'security'">
-          <div class="card-header bg-transparent">
+          <div class="card-header bg-white">
             <h5 class="mb-0">Change Password</h5>
           </div>
           <div class="card-body">

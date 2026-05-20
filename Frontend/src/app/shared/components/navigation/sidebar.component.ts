@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services/auth';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgIf],
   template: `
-    <div class="sidebar d-flex flex-column p-3 bg-light" style="width: 250px;">
+    <div class="sidebar d-flex flex-column p-3 bg-light">
       <div class="mb-4">
         <a class="text-decoration-none text-dark" routerLink="/public/home">
           <h5 class="fw-bold mb-0">Marketplace</h5>
@@ -111,6 +111,7 @@ import { AuthService } from '../../../core/services/auth';
         top: 0;
         left: 0;
         bottom: 0;
+        width: 250px;
         z-index: 100;
         overflow-y: auto;
       }

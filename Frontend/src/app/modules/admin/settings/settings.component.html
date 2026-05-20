@@ -1,0 +1,455 @@
+<div class="settings-page">
+  <div class="container-fluid px-0">
+    <!-- Page Header -->
+    <div class="settings-header mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-1">Settings</h2>
+          <p class="text-muted mb-0">Manage categories, users, and content moderation</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary" routerLink="/admin/dashboard">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+<!-- Settings Content -->
+    <div class="row">
+      <!-- Main Content Area -->
+      <div class="col-12">
+        <!-- Tabs Navigation -->
+        <div class="mb-4">
+          <app-tabs
+            [tabs]="tabs"
+            [(activeTab)]="activeTab"
+          ></app-tabs>
+        </div>
+
+        <!-- Categories Settings -->
+        <div class="card shadow-sm mb-4" *ngIf="activeTab === 'categories'">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-tags text-primary me-2"></i>Categories Management</h5>
+            <button class="btn btn-sm btn-primary" (click)="openAddCategoryModal()">
+              <i class="fas fa-plus me-1"></i>Add Category
+            </button>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-3">Manage product categories available in your marketplace. Toggle the star to show/hide in Popular Categories.</p>
+
+            <div class="category-list" *ngIf="categories.length > 0">
+              <div
+                class="category-item d-flex align-items-center justify-content-between p-3 mb-2 rounded"
+                *ngFor="let category of categories"
+              >
+                <div class="d-flex align-items-center">
+                  <div class="category-icon me-3">
+                    <i class="fas {{ category.icon || 'fa-tag' }} fa-lg"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0">{{ category.category_name }}</h6>
+                    <small class="text-muted">ID: {{ category.category_id }} • {{ category.listings_count || 0 }} listings</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <!-- Popular Toggle -->
+                  <button
+                    class="btn btn-sm btn-link text-warning"
+                    [class.text-warning]="category.is_popular"
+                    [class.text-muted]="!category.is_popular"
+                    (click)="togglePopular(category)"
+                    title="{{ category.is_popular ? 'Remove from Popular' : 'Add to Popular' }}"
+                  >
+                    <i class="fas fa-star"></i>
+                  </button>
+                  <!-- Actions Dropdown -->
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <a class="dropdown-item" (click)="openEditCategoryModal(category)">
+                          <i class="fas fa-edit me-2"></i>Edit
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item text-danger" (click)="deleteCategory(category)">
+                          <i class="fas fa-trash me-2"></i>Delete
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <app-empty-state
+              *ngIf="categories.length === 0"
+              icon="fa-tags"
+              title="No categories found"
+              description="Click &quot;Add Category&quot; to create one."
+            ></app-empty-state>
+          </div>
+        </div>
+
+        <!-- Users Management -->
+        <div class="card shadow-sm mb-4" *ngIf="activeTab === 'users'">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-users text-primary me-2"></i>User Management</h5>
+            <button class="btn btn-sm btn-primary" (click)="openAddUserModal()">
+              <i class="fas fa-plus me-1"></i>Add User
+            </button>
+          </div>
+          <div class="card-body">
+            <!-- Error Alert -->
+            <div *ngIf="usersError">
+              <app-alert variant="danger" [description]="usersError"></app-alert>
+              <button class="btn btn-sm btn-outline-danger" (click)="loadUsers()">
+                <i class="fas fa-sync me-1"></i>Retry
+              </button>
+            </div>
+
+            <div *ngIf="usersLoading" class="py-4">
+              <div class="mb-3">
+                <app-skeleton height="2.5rem" width="100%"></app-skeleton>
+              </div>
+              <div *ngFor="let i of [1, 2, 3, 4, 5]" class="mb-2">
+                <div class="d-flex gap-2">
+                  <app-skeleton height="2rem" width="10%"></app-skeleton>
+                  <app-skeleton height="2rem" width="20%"></app-skeleton>
+                  <app-skeleton height="2rem" width="25%"></app-skeleton>
+                  <app-skeleton height="2rem" width="15%"></app-skeleton>
+                  <app-skeleton height="2rem" width="15%"></app-skeleton>
+                  <app-skeleton height="2rem" width="15%"></app-skeleton>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive" *ngIf="!usersLoading && users.length > 0 && !usersError">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th class="border-0">ID</th>
+                    <th class="border-0">Name</th>
+                    <th class="border-0">Email</th>
+                    <th class="border-0">Role</th>
+                    <th class="border-0">Status</th>
+                    <th class="border-0">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users" class="align-middle">
+                    <td>{{ user.id }}</td>
+                    <td class="fw-medium">{{ user.name }}</td>
+                    <td class="text-muted">{{ user.email }}</td>
+                    <td>
+                      <select
+                        class="form-select form-select-sm role-select"
+                        [value]="getUserRole(user)"
+                        (change)="updateUserRole(user, $any($event.target).value)"
+                      >
+                        <option value="customer">Customer</option>
+                        <option value="shop_owner">Shop Owner</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </td>
+                    <td>
+                      <app-badge
+                        [text]="user.status || 'Unknown'"
+                        [variant]="getUserStatusBadgeVariant(user.status || 'inactive')"
+                      ></app-badge>
+                    </td>
+                    <td>
+                      <div class="d-flex gap-1">
+                        <button
+                          class="btn btn-sm"
+                          [ngClass]="user.is_banned ? 'btn-outline-success' : 'btn-outline-danger'"
+                          (click)="toggleBan(user)"
+                        >
+                          <i class="fas" [ngClass]="user.is_banned ? 'fa-check me-1' : 'fa-ban me-1'"></i>
+                          {{ user.is_banned ? 'Unban' : 'Ban' }}
+                        </button>
+                        <button
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="deleteUser(user)"
+                          title="Delete user"
+                        >
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <app-empty-state
+              *ngIf="!usersLoading && users.length === 0 && !usersError"
+              icon="fa-users"
+              title="No users found"
+              description="Click &quot;Add User&quot; to create a new user."
+            ></app-empty-state>
+          </div>
+        </div>
+
+        <!-- Moderation -->
+        <div class="card shadow-sm mb-4" *ngIf="activeTab === 'moderation'">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0">
+              <i class="fas fa-shield-alt text-primary me-2"></i>Moderation Queue
+            </h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="reportsLoading" class="py-4">
+              <div class="mb-3">
+                <app-skeleton height="2.5rem" width="100%"></app-skeleton>
+              </div>
+              <div *ngFor="let i of [1, 2, 3, 4, 5]" class="mb-2">
+                <div class="d-flex gap-2">
+                  <app-skeleton height="2rem" width="10%"></app-skeleton>
+                  <app-skeleton height="2rem" width="15%"></app-skeleton>
+                  <app-skeleton height="2rem" width="20%"></app-skeleton>
+                  <app-skeleton height="2rem" width="20%"></app-skeleton>
+                  <app-skeleton height="2rem" width="15%"></app-skeleton>
+                  <app-skeleton height="2rem" width="20%"></app-skeleton>
+                </div>
+              </div>
+            </div>
+
+            <table class="table table-striped" *ngIf="!reportsLoading">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Reporter</th>
+                  <th>Target</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let report of reports">
+                  <td>{{ report.id }}</td>
+                  <td>{{ report.reporter?.name || report.reporter }}</td>
+                  <td>{{ report.reportedItem }}</td>
+                  <td>{{ report.reason }}</td>
+                  <td>
+                    <app-badge
+                      [text]="report.status"
+                      [variant]="getReportStatusBadgeVariant(report.status)"
+                    ></app-badge>
+                  </td>
+                  <td>
+                    <button
+                      *ngIf="report.status === 'pending'"
+                      class="btn btn-sm btn-primary"
+                      (click)="resolve(report)"
+                    >
+                      Mark Resolved
+                    </button>
+                    <span *ngIf="report.status === 'resolved'" class="text-muted">No Action</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal" tabindex="-1" [class.show]="showCategoryModal" [style.display]="showCategoryModal ? 'block' : 'none'" (click)="closeCategoryModal()">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ editingCategory ? 'Edit Category' : 'Add Category' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeCategoryModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Category Name *</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="categoryForm.category_name"
+            placeholder="Enter category name"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            [(ngModel)]="categoryForm.description"
+            rows="2"
+            placeholder="Enter description (optional)"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Icon</label>
+          <app-icon-picker
+            [selectedIcon]="categoryForm.icon"
+            (iconSelected)="onIconSelected($event)"
+          ></app-icon-picker>
+        </div>
+
+        <div class="mb-3">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="isPopular"
+              [(ngModel)]="categoryForm.is_popular"
+            />
+            <label class="form-check-label" for="isPopular">
+              Show in Popular Categories
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCategoryModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="saveCategory()">
+          {{ editingCategory ? 'Save Changes' : 'Add Category' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop show" *ngIf="showCategoryModal"></div>
+
+<!-- Add User Modal -->
+<div class="modal" tabindex="-1" [class.show]="showUserModal" [style.display]="showUserModal ? 'block' : 'none'" (click)="closeUserModal()">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-user-plus me-2"></i>Add New User
+        </h5>
+        <button type="button" class="btn-close" (click)="closeUserModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Name *</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="userForm.name"
+            placeholder="Enter user name"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input
+            type="email"
+            class="form-control"
+            [(ngModel)]="userForm.email"
+            placeholder="Enter email address"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password *</label>
+          <input
+            type="password"
+            class="form-control"
+            [(ngModel)]="userForm.password"
+            placeholder="Enter password (min 6 characters)"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Role *</label>
+          <select class="form-select" [(ngModel)]="userForm.role">
+            <option value="customer">Customer</option>
+            <option value="shop_owner">Shop Owner</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="shop-fields" *ngIf="userForm.role === 'shop_owner'">
+          <hr class="my-3" />
+          <h6 class="mb-3"><i class="fas fa-store me-2"></i>Shop Details (Required for Shop Owner)</h6>
+          <div class="mb-3">
+            <label class="form-label">Shop Name *</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="userForm.shop_name"
+              placeholder="Enter shop name"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Shop Description</label>
+            <textarea
+              class="form-control"
+              [(ngModel)]="userForm.shop_description"
+              rows="2"
+              placeholder="Enter shop description (optional)"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeUserModal()">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveUser()"
+          [disabled]="userFormLoading"
+        >
+          <span *ngIf="userFormLoading" class="spinner-border spinner-border-sm me-2"></span>
+          Create User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop show" *ngIf="showUserModal"></div>
+
+<!-- Demote Shop Owner Warning Modal -->
+<div class="modal" tabindex="-1" [class.show]="showDemoteWarningModal" [style.display]="showDemoteWarningModal ? 'block' : 'none'" (click)="cancelDemote()">
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">
+          <i class="fas fa-exclamation-triangle me-2"></i>Warning: Shop Will Be Deleted
+        </h5>
+        <button type="button" class="btn-close" (click)="cancelDemote()"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>{{ demotingUser?.name }}</strong> owns a shop "<strong>{{ demotingUserShopName }}</strong>".</p>
+        <p class="text-danger fw-bold">Demoting to customer will:</p>
+        <ul class="text-danger">
+          <li>Delete shop "<strong>{{ demotingUserShopName }}</strong>"</li>
+          <li>Delete all <strong>{{ demotingUserListingCount }}</strong> listings</li>
+        </ul>
+        <div class="alert alert-danger mb-0">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          <strong>This action cannot be undone!</strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelDemote()">
+          <i class="fas fa-times me-1"></i>Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="confirmDemote()">
+          <i class="fas fa-trash me-1"></i>Yes, Delete Shop
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop show" *ngIf="showDemoteWarningModal"></div>
